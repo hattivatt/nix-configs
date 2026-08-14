@@ -1,0 +1,1343 @@
+{
+  programs.yazi.keymap = {
+    mgr = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "escape";
+          desc = "Exit visual mode, clear selection, or cancel search";
+        }
+        {
+          on = "<C-[>";
+          run = "escape";
+          desc = "Exit visual mode, clear selection, or cancel search";
+        }
+        {
+          on = "q";
+          run = "quit";
+          desc = "Quit the process";
+        }
+        {
+          on = "Q";
+          run = "quit --no-cwd-file";
+          desc = "Quit without outputting cwd-file";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Close the current tab, or quit if it's last";
+        }
+        {
+          on = "<C-z>";
+          run = "suspend";
+          desc = "Suspend the process";
+        }
+        {
+          on = "k";
+          run = "arrow -1";
+          desc = "Previous file";
+        }
+        {
+          on = "j";
+          run = "arrow +1";
+          desc = "Next file";
+        }
+        {
+          on = "<Up>";
+          run = "arrow -1";
+          desc = "Previous file";
+        }
+        {
+          on = "<Down>";
+          run = "arrow +1";
+          desc = "Next file";
+        }
+        {
+          on = "<C-u>";
+          run = "arrow -50%";
+          desc = "Move cursor up half page";
+        }
+        {
+          on = "<C-d>";
+          run = "arrow 50%";
+          desc = "Move cursor down half page";
+        }
+        {
+          on = "<C-b>";
+          run = "arrow -100%";
+          desc = "Move cursor up one page";
+        }
+        {
+          on = "<C-f>";
+          run = "arrow 100%";
+          desc = "Move cursor down one page";
+        }
+        {
+          on = "<S-PageUp>";
+          run = "arrow -50%";
+          desc = "Move cursor up half page";
+        }
+        {
+          on = "<S-PageDown>";
+          run = "arrow 50%";
+          desc = "Move cursor down half page";
+        }
+        {
+          on = "<PageUp>";
+          run = "arrow -100%";
+          desc = "Move cursor up one page";
+        }
+        {
+          on = "<PageDown>";
+          run = "arrow 100%";
+          desc = "Move cursor down one page";
+        }
+        {
+          on = [ "g" "g" ];
+          run = "arrow top";
+          desc = "Go to top";
+        }
+        {
+          on = "G";
+          run = "arrow bot";
+          desc = "Go to bottom";
+        }
+        {
+          on = "h";
+          run = "leave";
+          desc = "Back to the parent directory";
+        }
+        {
+          on = "l";
+          run = "enter";
+          desc = "Enter the child directory";
+        }
+        {
+          on = "<Left>";
+          run = "leave";
+          desc = "Back to the parent directory";
+        }
+        {
+          on = "<Right>";
+          run = "enter";
+          desc = "Enter the child directory";
+        }
+        {
+          on = "H";
+          run = "back";
+          desc = "Back to previous directory";
+        }
+        {
+          on = "L";
+          run = "forward";
+          desc = "Forward to next directory";
+        }
+        {
+          on = "<Space>";
+          run = [ "toggle" "arrow next" ];
+          desc = "Toggle the current selection state";
+        }
+        {
+          on = "<C-a>";
+          run = "toggle_all --state=on";
+          desc = "Select all files";
+        }
+        {
+          on = "<C-r>";
+          run = "toggle_all";
+          desc = "Invert selection of all files";
+        }
+        {
+          on = "v";
+          run = "visual_mode";
+          desc = "Enter visual mode (selection mode)";
+        }
+        {
+          on = "V";
+          run = "visual_mode --unset";
+          desc = "Enter visual mode (unset mode)";
+        }
+        {
+          on = "K";
+          run = "seek -5";
+          desc = "Seek up 5 units in the preview";
+        }
+        {
+          on = "J";
+          run = "seek 5";
+          desc = "Seek down 5 units in the preview";
+        }
+        {
+          on = "<Tab>";
+          run = "spot";
+          desc = "Spot hovered file";
+        }
+        {
+          on = "o";
+          run = "open";
+          desc = "Open selected files";
+        }
+        {
+          on = "O";
+          run = "open --interactive";
+          desc = "Open selected files interactively";
+        }
+        {
+          on = "e";
+          run = "edit";
+          desc = "Edit selected files";
+        }
+        {
+          on = "<Enter>";
+          run = "open";
+          desc = "Open selected files";
+        }
+        {
+          on = "<S-Enter>";
+          run = "open --interactive";
+          desc = "Open selected files interactively";
+        }
+        {
+          on = "y";
+          run = "yank";
+          desc = "Yank selected files (copy)";
+        }
+        {
+          on = "x";
+          run = "yank --cut";
+          desc = "Yank selected files (cut)";
+        }
+        {
+          on = "p";
+          run = "paste";
+          desc = "Paste yanked files";
+        }
+        {
+          on = "P";
+          run = "paste --force";
+          desc = "Paste yanked files (overwrite if the destination exists)";
+        }
+        {
+          on = "-";
+          run = "link";
+          desc = "Symlink the absolute path of yanked files";
+        }
+        {
+          on = "_";
+          run = "link --relative";
+          desc = "Symlink the relative path of yanked files";
+        }
+        {
+          on = "<C-->";
+          run = "hardlink";
+          desc = "Hardlink yanked files";
+        }
+        {
+          on = "Y";
+          run = "unyank";
+          desc = "Cancel the yank status";
+        }
+        {
+          on = "X";
+          run = "unyank";
+          desc = "Cancel the yank status";
+        }
+        {
+          on = [ "d" "d" ];
+          run = "remove";
+          desc = "Trash selected files";
+        }
+        {
+          on = "D";
+          run = "remove --permanently";
+          desc = "Permanently delete selected files";
+        }
+        {
+          on = "a";
+          run = "create";
+          desc = "Create a file (ends with / for directories)";
+        }
+        {
+          on = "r";
+          run = "rename --cursor=before_ext";
+          desc = "Rename selected file(s)";
+        }
+        {
+          on = ";";
+          run = "shell --interactive";
+          desc = "Run a shell command";
+        }
+        {
+          on = ":";
+          run = "shell --block --interactive";
+          desc = "Run a shell command (block until finishes)";
+        }
+        {
+          on = ".";
+          run = "hidden toggle";
+          desc = "Toggle the visibility of hidden files";
+        }
+        {
+          on = "s";
+          run = "search --via=fd";
+          desc = "Search files by name via fd";
+        }
+        {
+          on = "S";
+          run = "search --via=rg";
+          desc = "Search files by content via ripgrep";
+        }
+        {
+          on = "<C-s>";
+          run = "escape --search";
+          desc = "Cancel the ongoing search";
+        }
+        {
+          on = "Z";
+          run = "plugin fzf";
+          desc = "Jump to a file/directory via fzf";
+        }
+        {
+          on = "z";
+          run = "plugin zoxide";
+          desc = "Jump to a directory via zoxide";
+        }
+        {
+          on = [ "d" "r" ];
+          run = ''shell 'if [ "$#" -gt 0 ]; then dragon-drop -a -x "$@"; else dragon-drop -x "$0"; fi' --confirm'';
+          desc = "Drag&Drop files";
+        }
+        {
+          on = [ "m" "s" ];
+          run = "linemode size";
+          desc = "Linemode: size";
+        }
+        {
+          on = [ "m" "p" ];
+          run = "linemode permissions";
+          desc = "Linemode: permissions";
+        }
+        {
+          on = [ "m" "b" ];
+          run = "linemode btime";
+          desc = "Linemode: btime";
+        }
+        {
+          on = [ "m" "m" ];
+          run = "linemode mtime";
+          desc = "Linemode: mtime";
+        }
+        {
+          on = [ "m" "o" ];
+          run = "linemode owner";
+          desc = "Linemode: owner";
+        }
+        {
+          on = [ "m" "n" ];
+          run = "linemode none";
+          desc = "Linemode: none";
+        }
+        {
+          on = [ "c" "c" ];
+          run = "copy path";
+          desc = "Copy the file path";
+        }
+        {
+          on = [ "c" "d" ];
+          run = "copy dirname";
+          desc = "Copy the directory path";
+        }
+        {
+          on = [ "c" "f" ];
+          run = "copy filename";
+          desc = "Copy the filename";
+        }
+        {
+          on = [ "c" "n" ];
+          run = "copy name_without_ext";
+          desc = "Copy the filename without extension";
+        }
+        {
+          on = "f";
+          run = "filter --smart";
+          desc = "Filter files";
+        }
+        {
+          on = "/";
+          run = "find --smart";
+          desc = "Find next file";
+        }
+        {
+          on = "?";
+          run = "find --previous --smart";
+          desc = "Find previous file";
+        }
+        {
+          on = "n";
+          run = "find_arrow";
+          desc = "Next found";
+        }
+        {
+          on = "N";
+          run = "find_arrow --previous";
+          desc = "Previous found";
+        }
+        {
+          on = [ "," "m" ];
+          run = [ "sort mtime --reverse=no" "linemode mtime" ];
+          desc = "Sort by modified time";
+        }
+        {
+          on = [ "," "M" ];
+          run = [ "sort mtime --reverse=yes" "linemode mtime" ];
+          desc = "Sort by modified time (reverse)";
+        }
+        {
+          on = [ "," "b" ];
+          run = [ "sort btime --reverse=no" "linemode btime" ];
+          desc = "Sort by birth time";
+        }
+        {
+          on = [ "," "B" ];
+          run = [ "sort btime --reverse=yes" "linemode btime" ];
+          desc = "Sort by birth time (reverse)";
+        }
+        {
+          on = [ "," "e" ];
+          run = "sort extension --reverse=no";
+          desc = "Sort by extension";
+        }
+        {
+          on = [ "," "E" ];
+          run = "sort extension --reverse=yes";
+          desc = "Sort by extension (reverse)";
+        }
+        {
+          on = [ "," "a" ];
+          run = "sort alphabetical --reverse=no";
+          desc = "Sort alphabetically";
+        }
+        {
+          on = [ "," "A" ];
+          run = "sort alphabetical --reverse=yes";
+          desc = "Sort alphabetically (reverse)";
+        }
+        {
+          on = [ "," "n" ];
+          run = "sort natural --reverse=no";
+          desc = "Sort naturally";
+        }
+        {
+          on = [ "," "N" ];
+          run = "sort natural --reverse=yes";
+          desc = "Sort naturally (reverse)";
+        }
+        {
+          on = [ "," "s" ];
+          run = [ "sort size --reverse=no" "linemode size" ];
+          desc = "Sort by size";
+        }
+        {
+          on = [ "," "S" ];
+          run = [ "sort size --reverse=yes" "linemode size" ];
+          desc = "Sort by size (reverse)";
+        }
+        {
+          on = [ "," "r" ];
+          run = "sort random --reverse=no";
+          desc = "Sort randomly";
+        }
+        {
+          on = "t";
+          run = "tab_create --current";
+          desc = "Create a new tab with CWD";
+        }
+        {
+          on = "1";
+          run = "tab_switch 0";
+          desc = "Switch to first tab";
+        }
+        {
+          on = "2";
+          run = "tab_switch 1";
+          desc = "Switch to second tab";
+        }
+        {
+          on = "3";
+          run = "tab_switch 2";
+          desc = "Switch to third tab";
+        }
+        {
+          on = "4";
+          run = "tab_switch 3";
+          desc = "Switch to fourth tab";
+        }
+        {
+          on = "5";
+          run = "tab_switch 4";
+          desc = "Switch to fifth tab";
+        }
+        {
+          on = "6";
+          run = "tab_switch 5";
+          desc = "Switch to sixth tab";
+        }
+        {
+          on = "7";
+          run = "tab_switch 6";
+          desc = "Switch to seventh tab";
+        }
+        {
+          on = "8";
+          run = "tab_switch 7";
+          desc = "Switch to eighth tab";
+        }
+        {
+          on = "9";
+          run = "tab_switch 8";
+          desc = "Switch to ninth tab";
+        }
+        {
+          on = "[";
+          run = "tab_switch -1 --relative";
+          desc = "Switch to previous tab";
+        }
+        {
+          on = "]";
+          run = "tab_switch 1 --relative";
+          desc = "Switch to next tab";
+        }
+        {
+          on = "{";
+          run = "tab_swap -1";
+          desc = "Swap current tab with previous tab";
+        }
+        {
+          on = "}";
+          run = "tab_swap 1";
+          desc = "Swap current tab with next tab";
+        }
+        {
+          on = "w";
+          run = "tasks:show";
+          desc = "Show task manager";
+        }
+        {
+          on = [ "'" "h" ];
+          run = "cd ~";
+          desc = "Go to the home directory";
+        }
+        {
+          on = [ "'" "c" ];
+          run = "cd ~/.config";
+          desc = "Go to the config directory";
+        }
+        {
+          on = [ "'" "d" "d" ];
+          run = "cd ~/Downloads";
+          desc = "Go to the Downloads directory";
+        }
+        {
+          on = [ "'" "d" "c" ];
+          run = "cd ~/Documents";
+          desc = "Go to the Documents directory";
+        }
+        {
+          on = [ "'" "d" "m" ];
+          run = "cd ~/Downloads/MoviesAndShows";
+          desc = "Go to the media Downloads directory";
+        }
+        {
+          on = [ "'" "d" "t" ];
+          run = "cd ~/Downloads/Temporary";
+          desc = "Go to the temp Downloads directory";
+        }
+        {
+          on = [ "'" "t" "r" ];
+          run = "cd ~/.local/share/Trash";
+          desc = "Go to Trash directory";
+        }
+        {
+          on = [ "'" "w" "z" ];
+          run = "cd ~/work/zvuk";
+          desc = "";
+        }
+        {
+          on = [ "'" "m" "t" ];
+          run = "cd /run/media/hattivatt";
+          desc = "";
+        }
+        {
+          on = [ "'" "y" "d" ];
+          run = "cd ~/Yandex.Disk";
+          desc = "";
+        }
+        {
+          on = [ "'" "r" "p" ];
+          run = "cd ~/Yandex.Disk/Modules&Thoughts";
+          desc = "";
+        }
+        {
+          on = [ "'" "r" "b" ];
+          run = "cd ~/Yandex.Disk/Rulebooks";
+          desc = "";
+        }
+        {
+          on = [ "'" "f" "f" ];
+          run = "cd ~/.local/share/FoundryVTT";
+          desc = "";
+        }
+        {
+          on = [ "'" "n" ];
+          run = "cd ~/Notes";
+          desc = "";
+        }
+        {
+          on = [ "'" "<Space>" ];
+          run = "cd --interactive";
+          desc = "Go to a directory interactively";
+        }
+        {
+          on = [ "'" "s" ];
+          run = "plugin yafg";
+          desc = "find file by content (fuzzy match)";
+        }
+        {
+          on = [ "'" "'" ];
+          run = "plugin yafg";
+          desc = "find file by filename";
+        }
+        {
+          on = [ "g" "p" ];
+          run = ''shell 'git pull || true; echo "press ENTER"; read ENTER' --confirm --block'';
+          desc = "git pull";
+        }
+        {
+          on = [ "g" "b" ];
+          run = ''shell 'git branch | fzf | xargs git checkout' --confirm --block'';
+          desc = "git switch branch";
+        }
+        {
+          on = [ "g" "n" "b" ];
+          run = ''shell --interactive 'git checkout -b ' --confirm --block'';
+          desc = "git new branch";
+        }
+        {
+          on = [ "g" "d" "b" ];
+          run = ''shell 'git branch | fzf | xargs git branch -d' --confirm --block'';
+          desc = "git delete branch";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+      prepend_keymap = [
+        {
+          on   = [ "g" "i" ];
+          run  = "plugin lazygit";
+          desc = "run lazygit";
+        }
+        {
+          on   = [ "<C-s>" ];
+          run  = "plugin kdeconnect-send";
+          desc = "Send selected files via KDE Connect";
+        }
+        {
+          on   = [ "c" "m" ];
+          run  = "plugin chmod";
+          desc = "Chmod on selected files";
+        }
+        {
+          on = [ "M" "s" ];
+          run = "plugin sshfs -- menu";
+          desc = "Open SSHFS options";
+        }
+        {
+          on   = [ "<C-s>" ];
+          run  = "plugin kdeconnect-send";
+          desc = "Send selected files via KDE Connect";
+        }
+      ];
+    };
+    tasks = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "close";
+          desc = "Close task manager";
+        }
+        {
+          on = "<C-[>";
+          run = "close";
+          desc = "Close task manager";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Close task manager";
+        }
+        {
+          on = "w";
+          run = "close";
+          desc = "Close task manager";
+        }
+        {
+          on = "k";
+          run = "arrow prev";
+          desc = "Previous task";
+        }
+        {
+          on = "j";
+          run = "arrow next";
+          desc = "Next task";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous task";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next task";
+        }
+        {
+          on = "<Enter>";
+          run = "inspect";
+          desc = "Inspect the task";
+        }
+        {
+          on = "x";
+          run = "cancel";
+          desc = "Cancel the task";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    spot = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "close";
+          desc = "Close the spot";
+        }
+        {
+          on = "<C-[>";
+          run = "close";
+          desc = "Close the spot";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Close the spot";
+        }
+        {
+          on = "<Tab>";
+          run = "close";
+          desc = "Close the spot";
+        }
+        {
+          on = "k";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "j";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "h";
+          run = "swipe prev";
+          desc = "Swipe to previous file";
+        }
+        {
+          on = "l";
+          run = "swipe next";
+          desc = "Swipe to next file";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "<Left>";
+          run = "swipe prev";
+          desc = "Swipe to previous file";
+        }
+        {
+          on = "<Right>";
+          run = "swipe next";
+          desc = "Swipe to next file";
+        }
+        {
+          on = [ "c" "c" ];
+          run = "copy cell";
+          desc = "Copy selected cell";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    pick = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "close";
+          desc = "Cancel pick";
+        }
+        {
+          on = "<C-[>";
+          run = "close";
+          desc = "Cancel pick";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Cancel pick";
+        }
+        {
+          on = "<Enter>";
+          run = "close --submit";
+          desc = "Submit the pick";
+        }
+        {
+          on = "k";
+          run = "arrow prev";
+          desc = "Previous option";
+        }
+        {
+          on = "j";
+          run = "arrow next";
+          desc = "Next option";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous option";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next option";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    input = {
+      keymap = [
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Cancel input";
+        }
+        {
+          on = "<Enter>";
+          run = "close --submit";
+          desc = "Submit input";
+        }
+        {
+          on = "<Esc>";
+          run = "escape";
+          desc = "Back to normal mode, or cancel input";
+        }
+        {
+          on = "<C-[>";
+          run = "escape";
+          desc = "Back to normal mode, or cancel input";
+        }
+        {
+          on = "i";
+          run = "insert";
+          desc = "Enter insert mode";
+        }
+        {
+          on = "I";
+          run = [ "move first-char" "insert" ];
+          desc = "Move to the BOL, and enter insert mode";
+        }
+        {
+          on = "a";
+          run = "insert --append";
+          desc = "Enter append mode";
+        }
+        {
+          on = "A";
+          run = [ "move eol" "insert --append" ];
+          desc = "Move to the EOL, and enter append mode";
+        }
+        {
+          on = "v";
+          run = "visual";
+          desc = "Enter visual mode";
+        }
+        {
+          on = "r";
+          run = "replace";
+          desc = "Replace a single character";
+        }
+        {
+          on = "V";
+          run = [ "move bol" "visual" "move eol" ];
+          desc = "Select from BOL to EOL";
+        }
+        {
+          on = "<C-A>";
+          run = [ "move eol" "visual" "move bol" ];
+          desc = "Select from EOL to BOL";
+        }
+        {
+          on = "<C-E>";
+          run = [ "move bol" "visual" "move eol" ];
+          desc = "Select from BOL to EOL";
+        }
+        {
+          on = "h";
+          run = "move -1";
+          desc = "Move back a character";
+        }
+        {
+          on = "l";
+          run = "move 1";
+          desc = "Move forward a character";
+        }
+        {
+          on = "<Left>";
+          run = "move -1";
+          desc = "Move back a character";
+        }
+        {
+          on = "<Right>";
+          run = "move 1";
+          desc = "Move forward a character";
+        }
+        {
+          on = "<C-b>";
+          run = "move -1";
+          desc = "Move back a character";
+        }
+        {
+          on = "<C-f>";
+          run = "move 1";
+          desc = "Move forward a character";
+        }
+        {
+          on = "b";
+          run = "backward";
+          desc = "Move back to the start of the current or previous word";
+        }
+        {
+          on = "B";
+          run = "backward --far";
+          desc = "Move back to the start of the current or previous WORD";
+        }
+        {
+          on = "w";
+          run = "forward";
+          desc = "Move forward to the start of the next word";
+        }
+        {
+          on = "W";
+          run = "forward --far";
+          desc = "Move forward to the start of the next WORD";
+        }
+        {
+          on = "e";
+          run = "forward --end-of-word";
+          desc = "Move forward to the end of the current or next word";
+        }
+        {
+          on = "E";
+          run = "forward --far --end-of-word";
+          desc = "Move forward to the end of the current or next WORD";
+        }
+        {
+          on = "<A-b>";
+          run = "backward";
+          desc = "Move back to the start of the current or previous word";
+        }
+        {
+          on = "<A-f>";
+          run = "forward --end-of-word";
+          desc = "Move forward to the end of the current or next word";
+        }
+        {
+          on = "<C-Left>";
+          run = "backward";
+          desc = "Move back to the start of the current or previous word";
+        }
+        {
+          on = "<C-Right>";
+          run = "forward --end-of-word";
+          desc = "Move forward to the end of the current or next word";
+        }
+        {
+          on = "0";
+          run = "move bol";
+          desc = "Move to the BOL";
+        }
+        {
+          on = "$";
+          run = "move eol";
+          desc = "Move to the EOL";
+        }
+        {
+          on = "_";
+          run = "move first-char";
+          desc = "Move to the first non-whitespace character";
+        }
+        {
+          on = "^";
+          run = "move first-char";
+          desc = "Move to the first non-whitespace character";
+        }
+        {
+          on = "<C-a>";
+          run = "move bol";
+          desc = "Move to the BOL";
+        }
+        {
+          on = "<C-e>";
+          run = "move eol";
+          desc = "Move to the EOL";
+        }
+        {
+          on = "<Home>";
+          run = "move bol";
+          desc = "Move to the BOL";
+        }
+        {
+          on = "<End>";
+          run = "move eol";
+          desc = "Move to the EOL";
+        }
+        {
+          on = "<Backspace>";
+          run = "backspace";
+          desc = "Delete the character before the cursor";
+        }
+        {
+          on = "<Delete>";
+          run = "backspace --under";
+          desc = "Delete the character under the cursor";
+        }
+        {
+          on = "<C-h>";
+          run = "backspace";
+          desc = "Delete the character before the cursor";
+        }
+        {
+          on = "<C-d>";
+          run = "backspace --under";
+          desc = "Delete the character under the cursor";
+        }
+        {
+          on = "<C-u>";
+          run = "kill bol";
+          desc = "Kill backwards to the BOL";
+        }
+        {
+          on = "<C-k>";
+          run = "kill eol";
+          desc = "Kill forwards to the EOL";
+        }
+        {
+          on = "<C-w>";
+          run = "kill backward";
+          desc = "Kill backwards to the start of the current word";
+        }
+        {
+          on = "<A-d>";
+          run = "kill forward";
+          desc = "Kill forwards to the end of the current word";
+        }
+        {
+          on = "<C-Backspace>";
+          run = "kill backward";
+          desc = "Kill backwards to the start of the current word";
+        }
+        {
+          on = "<C-Delete>";
+          run = "kill forward";
+          desc = "Kill forwards to the end of the current word";
+        }
+        {
+          on = "d";
+          run = "delete --cut";
+          desc = "Cut selected characters";
+        }
+        {
+          on = "D";
+          run = [ "delete --cut" "move eol" ];
+          desc = "Cut until EOL";
+        }
+        {
+          on = "c";
+          run = "delete --cut --insert";
+          desc = "Cut selected characters, and enter insert mode";
+        }
+        {
+          on = "C";
+          run = [ "delete --cut --insert" "move eol" ];
+          desc = "Cut until EOL, and enter insert mode";
+        }
+        {
+          on = "s";
+          run = [ "delete --cut --insert" "move 1" ];
+          desc = "Cut current character, and enter insert mode";
+        }
+        {
+          on = "S";
+          run = [ "move bol" "delete --cut --insert" "move eol" ];
+          desc = "Cut from BOL until EOL, and enter insert mode";
+        }
+        {
+          on = "x";
+          run = [ "delete --cut" "move 1 --in-operating" ];
+          desc = "Cut current character";
+        }
+        {
+          on = "y";
+          run = "yank";
+          desc = "Copy selected characters";
+        }
+        {
+          on = "p";
+          run = "paste";
+          desc = "Paste copied characters after the cursor";
+        }
+        {
+          on = "P";
+          run = "paste --before";
+          desc = "Paste copied characters before the cursor";
+        }
+        {
+          on = "u";
+          run = "undo";
+          desc = "Undo the last operation";
+        }
+        {
+          on = "<C-r>";
+          run = "redo";
+          desc = "Redo the last operation";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    confirm = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "close";
+          desc = "Cancel the confirm";
+        }
+        {
+          on = "<C-[>";
+          run = "close";
+          desc = "Cancel the confirm";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Cancel the confirm";
+        }
+        {
+          on = "<Enter>";
+          run = "close --submit";
+          desc = "Submit the confirm";
+        }
+        {
+          on = "n";
+          run = "close";
+          desc = "Cancel the confirm";
+        }
+        {
+          on = "y";
+          run = "close --submit";
+          desc = "Submit the confirm";
+        }
+        {
+          on = "k";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "j";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    cmp = {
+      keymap = [
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Cancel completion";
+        }
+        {
+          on = "<Tab>";
+          run = "close --submit";
+          desc = "Submit the completion";
+        }
+        {
+          on = "<Enter>";
+          run = [ "close --submit" "input:close --submit" ];
+          desc = "Complete and submit the input";
+        }
+        {
+          on = "<A-k>";
+          run = "arrow prev";
+          desc = "Previous item";
+        }
+        {
+          on = "<A-j>";
+          run = "arrow next";
+          desc = "Next item";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous item";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next item";
+        }
+        {
+          on = "<C-p>";
+          run = "arrow prev";
+          desc = "Previous item";
+        }
+        {
+          on = "<C-n>";
+          run = "arrow next";
+          desc = "Next item";
+        }
+        {
+          on = "~";
+          run = "help";
+          desc = "Open help";
+        }
+        {
+          on = "<F1>";
+          run = "help";
+          desc = "Open help";
+        }
+      ];
+    };
+    help = {
+      keymap = [
+        {
+          on = "<Esc>";
+          run = "escape";
+          desc = "Clear the filter, or hide the help";
+        }
+        {
+          on = "<C-[>";
+          run = "escape";
+          desc = "Clear the filter, or hide the help";
+        }
+        {
+          on = "<C-c>";
+          run = "close";
+          desc = "Hide the help";
+        }
+        {
+          on = "k";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "j";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "<Up>";
+          run = "arrow prev";
+          desc = "Previous line";
+        }
+        {
+          on = "<Down>";
+          run = "arrow next";
+          desc = "Next line";
+        }
+        {
+          on = "f";
+          run = "filter";
+          desc = "Filter help items";
+        }
+      ];
+    };
+  };
+}
