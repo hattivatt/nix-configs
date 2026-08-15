@@ -23,7 +23,6 @@
       kubernetes-helm
     ];
     home.shellAliases = {
-      letswork = "tomb open /home/hattivatt/.local/share/tombs/work.tomb /home/hattivatt/work -k /home/hattivatt/.local/share/keyrings/work.tomb.key -f";
       vlog = "vault login -method=oidc role='default_user'";
       bkpw = "workbackup /home/hattivatt/.local/share/tombs/work.tomb /run/media/hattivatt/UD12/workbackups";
       wcn = "sudo openfortivpn --config /home/hattivatt/.config/openfortivpn/config --saml-login --pppd-use-peerdns=1";
