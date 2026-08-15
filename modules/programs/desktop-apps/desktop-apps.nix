@@ -81,6 +81,7 @@
       kdePackages.kdeconnect-kde
       browserpass
       cliphist
+      lsof
       local.autoskip
       local.calnotif
       local.change_wp
