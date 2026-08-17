@@ -44,6 +44,21 @@
           let f = (chezmoi list | fzf)
           chezmoi edit -a $"~/($f)"
       }
+      def --env y [...args] {
+        let tmp = (mktemp -t "yazi-cwd.XXXXX")
+        ^yazi ...$args --cwd-file $tmp
+
+        # Если исходная директория была удалена, пока работал yazi, $env.PWD
+        # указывает на несуществующий путь. cd в заведомо существующую директорию
+        # чинит PWD; других команд, работающих при битом PWD, нет.
+        cd $env.HOME
+
+        let cwd = (open $tmp)
+        if $cwd != "" and $cwd != $env.PWD {
+          cd $cwd
+        }
+        rm -fp $tmp
+      }
       $env.config = {
           keybindings: [
               {

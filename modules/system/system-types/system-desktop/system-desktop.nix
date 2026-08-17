@@ -35,7 +35,8 @@
       wl-kbptr
       yadisk
       zathura
-      # zen-browser
+      zen-browser
+      helium
       xkb
       flameshot
       swaync

@@ -5,7 +5,8 @@
       catppuccin.yazi.accent = "maroon";
       programs.yazi = {
         enable = true;
-        enableNushellIntegration = true;
+        enableNushellIntegration = false;
+        enableZshIntegration = true;
         initLua = ./_parts/init.lua;
         plugins = {
           chmod = pkgs.yaziPlugins.chmod;
