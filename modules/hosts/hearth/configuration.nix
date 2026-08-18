@@ -10,7 +10,13 @@
       networkmanager
       preservation
     ];
-    boot.kernelPackages = pkgs.linuxPackages_zen;
+    boot = {
+      kernelPackages = pkgs.linuxPackages_zen;
+      zswap.enable = true;
+      kernel.sysctl = {
+        "vm.swappiness" = 180;
+      };
+    };
     time.timeZone = "Asia/Ho_Chi_Minh";
     programs.appimage = {
       enable = true;
