@@ -9,6 +9,7 @@
       flatpak
       obsidian-plugins
       greetd
+      rebuild
     ];
   };
   flake.modules.homeManager.system-desktop = {
