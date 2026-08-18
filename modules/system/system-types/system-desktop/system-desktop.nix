@@ -42,6 +42,7 @@
       flameshot
       swaync
       syncthing
+      foundryvtt
     ];
   };
 }
