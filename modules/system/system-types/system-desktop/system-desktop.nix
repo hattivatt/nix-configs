@@ -10,6 +10,7 @@
       obsidian-plugins
       greetd
       rebuild
+      docker
     ];
   };
   flake.modules.homeManager.system-desktop = {
