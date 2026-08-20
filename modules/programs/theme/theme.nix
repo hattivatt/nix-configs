@@ -9,6 +9,7 @@
       autoEnable = true;
       flavor = "mocha";
       accent = "red";
+      gtk.icon.enable = true;
 
       cursors = {
         enable = true;
@@ -31,6 +32,21 @@
     qt = {
       enable = true;
       style.name = "kvantum";
+      platformTheme.name = "qtct";
+      qt5ctSettings = {
+        Appearance = {
+          style = "kvantum";
+          icon_theme = "Papirus-Dark";
+          standard_dialogs = "xdgdesktopportal";
+        };
+      };
+      qt6ctSettings = {
+        Appearance = {
+          style = "kvantum";
+          icon_theme = "Papirus-Dark";
+          standard_dialogs = "xdgdesktopportal";
+        };
+      };
     };
   };
 }

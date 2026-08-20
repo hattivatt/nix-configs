@@ -28,8 +28,6 @@ in
         ${exec "uwsm app -- foot -a aerc -e aerc"}
         ${exec "sleep 3 && uwsm app -- foot -a khal  -e khal interactive"}
         ${exec "uwsm app -- pimsync daemon"}
-        ${exec "uwsm app -- udiskie -s"}
-        ${exec "uwsm app -- kdeconnect-indicator"}
         ${exec "uwsm app -- wl-paste --type text --watch cliphist store"}
         ${exec "uwsm app -- wl-paste --type image --watch cliphist store"}
         ${exec "uwsm app -- downloads_clear > /tmp/downloads_clear.log"}

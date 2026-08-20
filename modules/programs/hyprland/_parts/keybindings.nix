@@ -42,6 +42,7 @@ in
     settings.bind = [
       (bind "SUPER" (submap "main"))
       (bind "SUPER_L" (submap "main"))
+      (bind "SUPER_R" (submap "main"))
       (bind "XF86AudioNext" (exec "uwsm app -- playerctl -p spotify next"))
       (bind "XF86AudioPrev" (exec "uwsm app -- playerctl -p spotify previous"))
       (bind "mouse:275" (exec ''uwsm app -- bash -c \"playerctl -p spotify loop $(case $(playerctl -p spotify loop) in Track) echo Playlist;; Playlist) echo None;; None) echo Track;; esac)\"''))
@@ -229,6 +230,7 @@ in
         (bind "Q" (submap "reset"))
         (bind "SUPER" (submap "reset"))
         (bind "SUPER_L" (submap "reset"))
+        (bind "SUPER_R" (submap "reset"))
       ];
     };
     submaps.resize.settings = {

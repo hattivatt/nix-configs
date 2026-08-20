@@ -11,6 +11,7 @@
       greetd
       rebuild
       docker
+      udisks
     ];
   };
   flake.modules.homeManager.system-desktop = {
@@ -44,6 +45,9 @@
       swaync
       syncthing
       foundryvtt
+      udisks
+      mime
+      qbittorrent
     ];
   };
 }

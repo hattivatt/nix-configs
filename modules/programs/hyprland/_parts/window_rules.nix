@@ -38,6 +38,7 @@
         {match = {class = "Mattermost.Desktop";}; scrolling_width = 0.98;}
         {match = {class = "vesktop";}; scrolling_width = 0.98;}
         {match = {class = "slack";}; scrolling_width = 0.98;}
+        {match = {class = "FBReader";}; scrolling_width = 1;}
       ];
       monitor = {output = ""; mode = "preferred"; position = "auto"; scale = 1;};
   };

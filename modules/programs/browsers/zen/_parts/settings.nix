@@ -6,6 +6,7 @@
         "browser.download.folderList" = 2;
         "browser.download.panel.shown" = true;
         "browser.download.useDownloadDir" = false;
+        "browser.tabs.insertRelatedAfterCurrent" = false;
         "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
         "general.autoScroll" = true;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

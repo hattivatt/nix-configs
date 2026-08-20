@@ -31,7 +31,8 @@
       XDG_SESSION_TYPE = "wayland";
       DIFFPROG = "nvim -d";
       TERMINAL = "foot";
-      BROWSER = "zen-browser";
+      BROWSER = "zen-beta";
+      DEFAULT_BROWSER = "zen-beta";
       VIDEO = "mpv";
       IMAGE = "imv";
       COLORTERM = "truecolor";

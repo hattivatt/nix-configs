@@ -23,6 +23,10 @@
     services = {
       libinput.enable = true;
     };
+    networking.firewall = rec {
+      allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+      allowedUDPPortRanges = allowedTCPPortRanges;
+    };
   };
   flake.modules.homeManager.desktop-apps =
   { pkgs, ... }:
@@ -38,7 +42,6 @@
       proton-vpn-cli
       playerctl
       wev
-      qbittorrent
       wlr-which-key
       hyprland-autoname-workspaces
       tessen
@@ -78,10 +81,11 @@
       yamllint
       networkmanagerapplet
       udiskie
-      kdePackages.kdeconnect-kde
       browserpass
       cliphist
       lsof
+      fzf
+      dig
       local.autoskip
       local.calnotif
       local.change_wp
@@ -98,5 +102,34 @@
       local.workbackup
       local.zkn
     ];
+    home.file.".gtk-bookmarks".text = ''
+      file:///home/hattivatt/Downloads/Temporary Temporary
+      file:///home/hattivatt/Documents Documents
+    '';
+    services.kdeconnect.enable = true;
+    xdg.portal = {
+      extraPortals = with pkgs; [ lxqt.xdg-desktop-portal-lxqt ];
+      config.hyprland = {
+        default = [ "lxqt" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+      };
+    };
+    xdg.configFile."lxqt/filedialog.conf".text = ''
+      [Sizes]
+      SplitterPos=200
+      WindowSize=@Size(1193 759)
+
+      [View]
+      BigIconSize=48
+      Mode=Detailed
+      ScrollPerPixel=true
+      ShowThumbnails=true
+      SmallIconSize=24
+      SortColumn=name
+      SortFolderFirst=true
+      SortOrder=ascending
+      ThumbnailIconSize=128
+    '';
   };
 }

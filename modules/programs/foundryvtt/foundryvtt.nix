@@ -3,7 +3,7 @@
   { config, ... }:
   {
     sops.secrets."foundry_secrets" = { };
-    xdg.dataFile."FoundryVTT/docker/v13/secret.json".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets."foundry_secrets".path;
+    xdg.dataFile."FoundryVTT/docker/v13/secrets.json".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets."foundry_secrets".path;
     xdg.dataFile."FoundryVTT/docker/v13/compose.yml".text = ''
       ---
       secrets:
@@ -30,7 +30,7 @@
             - source: config_json
               target: config.json
     '';
-    xdg.dataFile."FoundryVTT/docker/v14/secret.json".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets."foundry_secrets".path;
+    xdg.dataFile."FoundryVTT/docker/v14/secrets.json".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets."foundry_secrets".path;
     xdg.dataFile."FoundryVTT/docker/v14/compose.yml".text = ''
       ---
       secrets:

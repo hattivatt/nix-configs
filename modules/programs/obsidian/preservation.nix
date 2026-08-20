@@ -1,8 +1,8 @@
 {
   flake.modules.nixos.preservation = {
     preservation.preserveAt."/persist".users.hattivatt.directories = [
-      ".config/helium"
-      ".config/net.imput.helium"
+      ".config/obsidian"
+      "Notes"
     ];
   };
 }

@@ -1,7 +1,7 @@
 {
   programs.yazi.settings = {
     mgr = {
-      ratio = [ 1 2 3 ];
+      ratio = [ 1 4 3 ];
       sort_by = "alphabetical";
       sort_sensitive = false;
       sort_reverse   = false;
@@ -10,6 +10,7 @@
       show_hidden    = true;
       show_symlink   = true;
       scrolloff      = 5;
+      mouse_events = [ "click" "scroll" "drag" ];
     };
     preview = {
       tab_size        = 2;
@@ -18,14 +19,15 @@
       cache_dir       = "";
       image_filter    = "triangle";
       image_quality   = 75;
-      sixel_fraction  = 15;
+      wrap = "no";
+      image_delay = 30;
       ueberzug_scale  = 1;
       ueberzug_offset = [ 0 0 0 0 ];
     };
     opener = {
       edit = [
         {
-          run = ''nvim "$@"'';
+          run = ''nvim "%s"'';
           desc = "nvim";
           block = true;
           for = "unix";
@@ -45,17 +47,17 @@
       ];
       open = [
         {
-          run = ''xdg-open "$@"'';
+          run = ''xdg-open "%s"'';
           desc = "Open";
           for = "linux";
         }
         {
-          run = ''open "$@"'';
+          run = ''open "%s"'';
           desc = "Open";
           for = "macos";
         }
         {
-          run = ''start "" "%1"'';
+          run = ''start "" "%s1"'';
           orphan = true;
           desc = "Open";
           for = "windows";
@@ -63,23 +65,23 @@
       ];
       reveal = [
         {
-          run = ''xdg-open "$(dirname "$0")"'';
+          run = ''xdg-open "%d1"'';
           desc = "Reveal";
           for = "linux";
         }
         {
-          run = ''open -R "$1"'';
+          run = ''open -R "%s1"'';
           desc = "Reveal";
           for = "macos";
         }
         {
-          run = ''explorer /select, "%1"'';
+          run = ''explorer /select, "%s1"'';
           orphan = true;
           desc = "Reveal";
           for = "windows";
         }
         {
-          run = ''exiftool "$1"; echo "Press enter to exit"; read _'';
+          run = ''exiftool "%s1"; echo "Press enter to exit"; read _'';
           block = true;
           desc = "Show EXIF";
           for = "unix";
@@ -87,29 +89,29 @@
       ];
       extract = [
         {
-          run = ''unar "$1"'';
+          run = "ya pub extract --list %s";
           desc = "Extract here";
           for = "unix";
         }
         {
-          run = ''unar "%1"'';
+          run = ''unar "%s1"'';
           desc = "Extract here";
           for = "windows";
         }
       ];
       play = [
         {
-          run = ''mpv "$@"'';
+          run = ''mpv "%s"'';
           orphan = true;
           for = "unix";
         }
         {
-          run = ''mpv "%1"'';
+          run = ''mpv "%s1"'';
           orphan = true;
           for = "windows";
         }
         {
-          run = ''mediainfo "$1"; echo "Press enter to exit"; read _'';
+          run = ''mediainfo "%s1"; echo "Press enter to exit"; read _'';
           block = true;
           desc = "Show media info";
           for = "unix";
@@ -165,11 +167,14 @@
       ];
     };
     tasks = {
-      micro_workers = 10;
-      macro_workers = 25;
-      bizarre_retry = 5;
+      file_workers = 3;
+      plugin_workers = 5;
+      fetch_workers = 5;
+      preload_workers = 2;
+      process_workers = 5;
+      bizarre_retry = 3;
       image_alloc = 536870912;
-      image_bound = [ 0 0 ];
+      image_bound = [ 10000 10000 ];
       suppress_preload = false;
     };
     plugin = {
@@ -286,7 +291,7 @@
       quit_origin = "top-center";
       quit_offset = [ 0 2 50 3 ];
     };
-    select = {
+    pick = {
       open_title  = "Open with:";
       open_origin = "hovered";
       open_offset = [ 0 1 50 7 ];
@@ -296,6 +301,5 @@
       sort_sensitive = false;
       sort_reverse   = false;
     };
-    log.enabled = false;
   };
 }
