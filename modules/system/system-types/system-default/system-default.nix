@@ -8,6 +8,7 @@
       [
         system-minimal
         home-manager
+        dns
       ]
       ++ (with inputs.self.modules.generic; [
         pkgs-by-name

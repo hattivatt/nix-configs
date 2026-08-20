@@ -18,6 +18,7 @@
     home.packages = with pkgs; [
       hyprpicker
       hyprland-per-window-layout
+      hyprpaper
       hyprsysteminfo
     ];
     systemd.user.services = {
