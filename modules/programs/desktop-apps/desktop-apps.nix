@@ -86,6 +86,7 @@
       lsof
       fzf
       dig
+      libnotify
       local.autoskip
       local.calnotif
       local.change_wp
