@@ -20,6 +20,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:denful/import-tree";
+    llm-agents.url = "github:numtide/llm-agents.nix";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixvim.url = "github:nix-community/nixvim";
     obsidian-plugins = {

@@ -1,107 +1,32 @@
+{ inputs, ... }:
 {
+  flake.modules.nixos.agents =
+  {
+    nixpkgs.overlays = [ inputs.llm-agents.overlays.shared-nixpkgs ];
+    nix.settings = {
+      extra-substituters = [ "https://cache.numtide.com" ];
+      extra-trusted-public-keys = [
+        "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      ];
+    };
+  };
   flake.modules.homeManager.agents =
-    { config, ... }:
+    { config, pkgs, ... }:
     {
       programs.opencode = {
         enable = true;
-        agents = {
-          orchestrator = ''
-            ---
-            mode: primary
-            model: opencode-go/gpt-5.6-luna
-            permission:
-              edit: deny
-              bash: deny
-              task:
-                "*": allow
-            ---
-            Ты оркестратор. Твоя работа — анализ и координация, не реализация.
-
-            Порядок работы:
-            1. Разбери запрос пользователя. Если нужен контекст кодовой базы —
-               сначала вызови @explore, не читай файлы пачками сам.
-            2. Декомпозируй задачу на независимые подзадачи и составь план.
-            3. Каждую подзадачу реализации делегируй сабагенту general через
-               task tool. Brief должен быть самодостаточным: сабагент не видит
-               наш разговор, только твой текст. Указывай конкретные файлы,
-               ожидаемый результат и ограничения.
-            4. Независимые подзадачи запускай параллельно, в одном блоке вызовов.
-            5. Получив результаты, проверь их целостность. При сомнениях —
-               делегируй ревью отдельному сабагенту, не правь код сам.
-            6. В финале дай пользователю сводку: что сделано, где, что не
-               получилось.
-
-            Запрещено:
-            - Редактировать или создавать файлы самостоятельно.
-            - Выполнять команды напрямую (это делегируется).
-            - Передавать сабагенту расплывчатые формулировки вида «улучши код».
-
-            Мультимодальный контент (изображения, скриншоты) анализируй ТОЛЬКО
-            сам. Сабагенты работают на моделях без поддержки изображений.
-            Если нужно передать информацию с изображения сабагенту — опиши её
-            текстом в brief'е.
-          '';
-          general = ''
-            ---
-            description: Универсальный исполнитель подзадач
-            mode: subagent
-            model: opencode-go/deepseek-v4-flash
-            ---
-            Выполняй делегированную подзадачу. Работай автономно, вопросов
-            оркестратору задать нельзя — если данных не хватает, принимай
-            разумное предположение и фиксируй его в отчёте.
-          '';
-        };
-        settings = {
-          "$schema" = "https://opencode.ai/config.json";
-          autoupdate = false;
-          agent = {
-            explore = {
-              model = "opencode-go/deepseek-v4-flash";
-            };
-          };
-          permission = {
-            edit = "allow";
-            bash = {
-              "*" = "ask";
-              "ls *" = "allow";
-              "grep *" = "allow";
-              "rg *" = "allow";
-              "sort *" = "allow";
-              "curl *" = "allow";
-              "find *" = "allow";
-              "echo *" = "allow";
-              "diff *" = "allow";
-              "jq *" = "allow";
-              "sed *" = "allow";
-              "cat *" = "allow";
-              "cp *" = "allow";
-              "wc *" = "allow";
-              "mkdir *" = "allow";
-              "head *" = "allow";
-              "tail *" = "allow";
-              "base64 *" = "allow";
-              "timeout *" = "allow";
-              "git commit *" = "ask";
-              "git branch *" = "ask";
-              "git reset *" = "ask";
-              "git push *" = "ask";
-              "git rebase *" = "ask";
-              "git clean *" = "ask";
-              "git *" = "allow";
-            };
-            external_directory = {
-              "${config.xdg.dataHome}/clankerland/**" = "allow";
-            };
-          };
-        };
+        package = pkgs.llm-agents.opencode;
       };
       programs.pi-coding-agent = {
         enable = true;
         configDir = "${config.xdg.configHome}/pi/agent";
+        package = pkgs.llm-agents.pi;
       };
       home.shellAliases = {
         pia = ''pi -p --model "opencode-go/deepseek-v4-flash"'';
       };
+      home.packages = with pkgs.llm-agents; [
+        opencode2
+      ];
     };
 }

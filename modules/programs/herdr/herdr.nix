@@ -1,9 +1,10 @@
 {
   flake.modules.homeManager.herdr =
-    { config, ... }:
+    { config, pkgs, ... }:
     {
       programs.herdr = {
         enable = true;
+        package = pkgs.llm-agents.herdr;
         settings = {
           onboarding = false;
           terminal.default_shell = "nu";
