@@ -6,6 +6,8 @@
       sort_sensitive = false;
       sort_reverse   = false;
       sort_dir_first = true;
+      sort_translit  = false;
+      sort_fallback  = "alphabetical";
       linemode       = "size";
       show_hidden    = true;
       show_symlink   = true;
@@ -27,37 +29,55 @@
     opener = {
       edit = [
         {
-          run = ''nvim "%s"'';
+          run = ''nvim %s'';
           desc = "nvim";
           block = true;
           for = "unix";
         }
         {
-          run = ''code "%*"'';
+          run = "code %s";
           orphan = true;
           desc = "code";
           for = "windows";
         }
         {
-          run = ''code -w "%*"'';
+          run = "code -w %s";
           block = true;
           desc = "code (block)";
           for = "windows";
         }
       ];
+      play = [
+        {
+          run = ''mpv %s'';
+          orphan = true;
+          for = "unix";
+        }
+        {
+          run = ''mpv %s1'';
+          orphan = true;
+          for = "windows";
+        }
+        {
+          run = ''mediainfo %s1; echo 'Press enter to exit'; read _'';
+          block = true;
+          desc = "Show media info";
+          for = "unix";
+        }
+      ];
       open = [
         {
-          run = ''xdg-open "%s"'';
+          run = "xdg-open %s";
           desc = "Open";
           for = "linux";
         }
         {
-          run = ''open "%s"'';
+          run = "open %s";
           desc = "Open";
           for = "macos";
         }
         {
-          run = ''start "" "%s1"'';
+          run = ''start "" %s1'';
           orphan = true;
           desc = "Open";
           for = "windows";
@@ -65,23 +85,23 @@
       ];
       reveal = [
         {
-          run = ''xdg-open "%d1"'';
+          run = "xdg-open %d1";
           desc = "Reveal";
           for = "linux";
         }
         {
-          run = ''open -R "%s1"'';
+          run = "open -R %s1";
           desc = "Reveal";
           for = "macos";
         }
         {
-          run = ''explorer /select, "%s1"'';
+          run = "explorer /select,%s1";
           orphan = true;
           desc = "Reveal";
           for = "windows";
         }
         {
-          run = ''exiftool "%s1"; echo "Press enter to exit"; read _'';
+          run = ''clear; exiftool %s1; echo 'Press enter to exit'; read _'';
           block = true;
           desc = "Show EXIF";
           for = "unix";
@@ -91,37 +111,21 @@
         {
           run = "ya pub extract --list %s";
           desc = "Extract here";
-          for = "unix";
-        }
-        {
-          run = ''unar "%s1"'';
-          desc = "Extract here";
-          for = "windows";
         }
       ];
-      play = [
-        {
-          run = ''mpv "%s"'';
-          orphan = true;
-          for = "unix";
-        }
-        {
-          run = ''mpv "%s1"'';
-          orphan = true;
-          for = "windows";
-        }
-        {
-          run = ''mediainfo "%s1"; echo "Press enter to exit"; read _'';
-          block = true;
-          desc = "Show media info";
-          for = "unix";
-        }
+      download = [
+        { run = "ya emit download --open %S"; desc = "Download and open"; }
+        { run = "ya emit download %S";        desc = "Download"; }
+      ];
+      trash = [
+        { run = "ya pub trash-restore --list %S"; desc = "Restore selected files"; }
+        { run = "ya pub trash-empty --list %S";   desc = "Empty trash bin"; }
       ];
     };
     open = {
       rules = [
         {
-          url = "*/";
+          mime = "folder/*";
           use = [ "edit" "open" "reveal" ];
         }
         {
@@ -141,27 +145,27 @@
           use = [ "play" "reveal" ];
         }
         {
-          mime = "inode/x-empty";
+          mime = "application/{json,ndjson,javascript,wine-extension-ini}";
           use = [ "edit" "reveal" ];
         }
         {
-          mime = "application/*zip";
+          mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}";
           use = [ "extract" "reveal" ];
         }
         {
-          mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}";
-          use = [ "extract" "reveal" ];
-        }
-        {
-          mime = "application/json";
+          mime = "inode/empty";
           use = [ "edit" "reveal" ];
         }
         {
-          mime = "*/javascript";
-          use = [ "edit" "reveal" ];
+          mime = "vfs/{absent,stale}";
+          use = "download";
         }
         {
-          mime = "*";
+          mime = "trash/**";
+          use = [ "open" "trash" ];
+        }
+        {
+          url = "*";
           use = [ "open" "reveal" "edit" ];
         }
       ];
@@ -180,25 +184,32 @@
     plugin = {
       previewers = [
         {
-          url = "*/";
+          mime = "folder/*";
           run = "folder";
-          sync = true;
         }
         {
           mime = "text/*";
           run = "code";
         }
         {
-          mime = "*/{xml,javascript,x-wine-extension-ini}";
+          mime = "application/{mbox,javascript,wine-extension-ini}";
           run = "code";
         }
         {
-          mime = "application/json";
+          mime = "application/{json,ndjson}";
           run = "json";
         }
         {
           mime = "image/vnd.djvu";
           run = "noop";
+        }
+        {
+          mime = "image/{avif,hei?,jxl}";
+          run = "magick";
+        }
+        {
+          mime = "image/svg+xml";
+          run = "svg";
         }
         {
           mime = "image/*";
@@ -213,12 +224,52 @@
           run = "pdf";
         }
         {
-          mime = "application/*zip";
+          mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}";
           run = "archive";
         }
         {
-          mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}";
+          mime = "application/{debian*-package,redhat-package-manager,rpm,android.package-archive}";
           run = "archive";
+        }
+        {
+          url = "*.{AppImage,appimage}";
+          run = "archive";
+        }
+        {
+          mime = "application/{iso9660-image,qemu-disk,ms-wim,apple-diskimage}";
+          run = "archive";
+        }
+        {
+          mime = "application/virtualbox-{vhd,vhdx}";
+          run = "archive";
+        }
+        {
+          url = "*.{img,fat,ext,ext2,ext3,ext4,squashfs,ntfs,hfs,hfsx}";
+          run = "archive";
+        }
+        {
+          mime = "font/*";
+          run = "font";
+        }
+        {
+          mime = "application/ms-opentype";
+          run = "font";
+        }
+        {
+          mime = "inode/empty";
+          run = "empty";
+        }
+        {
+          mime = "vfs/*";
+          run = "vfs";
+        }
+        {
+          mime = "trash/**";
+          run = "trash";
+        }
+        {
+          mime = "null/*";
+          run = "null";
         }
         {
           url = "*";
@@ -227,36 +278,13 @@
       ];
       prepend_previewers =[
         {
-          mime = "application/*zip";
-          run = "ouch";
-        }
-        {
-          mime = "application/x-tar";
-          run = "ouch";
-        }
-        {
-          mime = "application/x-bzip2";
-          run = "ouch";
-        }
-        {
-          mime = "application/x-7z-compressed";
-          run = "ouch";
-        }
-        {
-          mime = "application/x-rar";
-          run = "ouch";
-        }
-        {
-          mime = "application/x-xz";
-          run = "ouch";
-        }
-        {
           mime = "text/csv";
           run = "miller";
         }
       ];
     };
     input = {
+      cursor_blink = false;
       cd_title  = "Change directory:";
       cd_origin = "top-center";
       cd_offset = [ 0 2 50 3 ];
@@ -284,12 +312,22 @@
       shell_title  = [ "Shell:" "Shell (block):" ];
       shell_origin = "top-center";
       shell_offset = [ 0 2 50 3 ];
-      overwrite_title  = "Overwrite an existing file? (y/N)";
-      overwrite_origin = "top-center";
-      overwrite_offset = [ 0 2 50 3 ];
-      quit_title  = "{n} task{s} running, sure to quit? (y/N)";
-      quit_origin = "top-center";
-      quit_offset = [ 0 2 50 3 ];
+    };
+    confirm = {
+      trash_title 	= "Trash {n} selected file{s}?";
+      trash_origin	= "center";
+      trash_offset	= [ 0 0 70 20 ];
+      delete_title 	= "Permanently delete {n} selected file{s}?";
+      delete_origin	= "center";
+      delete_offset	= [ 0 0 70 20 ];
+      overwrite_title  = "Overwrite file?";
+      overwrite_body   = "Will overwrite the following file:";
+      overwrite_origin = "center";
+      overwrite_offset = [ 0 0 50 15 ];
+      quit_title  = "Quit?";
+      quit_body   = "There are unfinished tasks, quit anyway?\n(Open task manager with default key 'w')";
+      quit_origin = "center";
+      quit_offset = [ 0 0 50 15 ];
     };
     pick = {
       open_title  = "Open with:";
@@ -300,6 +338,7 @@
       sort_by        = "none";
       sort_sensitive = false;
       sort_reverse   = false;
+      sort_translit  = false;
     };
   };
 }

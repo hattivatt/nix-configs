@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.zen-browser =
-  { inputs, pkgs, ... }:
+  { inputs, pkgs, lib, config, ... }:
   {
     imports = [
       inputs.zen-browser.homeModules.beta
@@ -21,5 +21,15 @@
         ];
       };
     };
+    home.activation.zenUnlockProfilesIni =
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        profilesIni="${config.xdg.configHome}/zen/profiles.ini"
+        if [ -L "$profilesIni" ]; then
+          src="$(readlink "$profilesIni")"
+          rm "$profilesIni"
+          cp "$src" "$profilesIni"
+          chmod 644 "$profilesIni"
+        fi
+      '';
   };
 }

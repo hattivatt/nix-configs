@@ -105,6 +105,7 @@
     ];
     home.file.".gtk-bookmarks".text = ''
       file:///home/hattivatt/Downloads/Temporary Temporary
+      file:///home/hattivatt/Downloads Downloads
       file:///home/hattivatt/Documents Documents
     '';
     services.kdeconnect.enable = true;

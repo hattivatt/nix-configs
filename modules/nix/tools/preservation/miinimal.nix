@@ -32,7 +32,7 @@
             ".nixos"
             ".config/Exodus"
             ".config/kdeconnect"
-            ".config/Spotify"
+            ".config/spotify"
             {
               directory = ".ssh";
               mode = "0700";
