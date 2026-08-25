@@ -1,9 +1,10 @@
 {
   flake.modules.nixos.preservation = {
     preservation.preserveAt."/persist".users.hattivatt.directories = [
-      ".config/nushell"
-      ".config/zsh"
-      ".local/share/zoxide"
+      {
+        directory = ".local/state/nvim";
+        mode = "0700";
+      }
     ];
   };
 }

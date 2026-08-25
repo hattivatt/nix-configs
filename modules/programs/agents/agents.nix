@@ -27,6 +27,7 @@
       };
       home.packages = with pkgs.llm-agents; [
         opencode2
+        autolith
       ];
     };
 }

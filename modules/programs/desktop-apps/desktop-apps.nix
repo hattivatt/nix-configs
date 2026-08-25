@@ -87,6 +87,8 @@
       fzf
       dig
       libnotify
+      devenv
+      bubblewrap
       local.autoskip
       local.calnotif
       local.change_wp
@@ -107,6 +109,8 @@
       file:///home/hattivatt/Downloads/Temporary Temporary
       file:///home/hattivatt/Downloads Downloads
       file:///home/hattivatt/Documents Documents
+      file:///home/hattivatt/Projects Projects
+      file:///home/hattivatt/Yandex.Disk Yandex.Disk
     '';
     services.kdeconnect.enable = true;
     xdg.portal = {

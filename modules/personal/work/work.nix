@@ -21,6 +21,7 @@
       openfortivpn
       fluxcd
       kubernetes-helm
+      glab
     ];
     home.shellAliases = {
       vlog = "vault login -method=oidc role='default_user'";

@@ -6,6 +6,8 @@
         {match = {class = "md.Obsidian";}; workspace = "10 silent";}
         {match = {class = "zen";}; workspace = "1 silent";}
         {match = {class = "zen-beta";}; workspace = "1 silent";}
+        {match = {class = "zen-beta";}; scrolling_width = 1;}
+        {match = {class = "helium";}; scrolling_width = 1;}
         {match = {class = "org.telegram.desktop";}; workspace = "2 silent";}
         {match = {class = "mattermost-desktop";}; workspace = "2 silent";}
         {match = {class = "Mattermost";}; workspace = "2 silent";}

@@ -27,8 +27,6 @@
             "Documents"
             "Pictures"
             "Projects"
-            ".local/state"
-            ".local/share"
             ".nixos"
             ".config/Exodus"
             ".config/kdeconnect"

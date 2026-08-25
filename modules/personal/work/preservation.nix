@@ -3,6 +3,7 @@
     preservation.preserveAt."/persist".users.hattivatt.directories = [
       ".cache/terragrunt"
       ".kube"
+      ".tenv"
     ];
   };
 }

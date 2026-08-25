@@ -1,12 +1,11 @@
 {
   flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".directories = [
-      "/var/lib/flatpak"
-    ];
     preservation.preserveAt."/persist".users.hattivatt.directories = [
-      ".var/app"
+      ".local/share/calendars"
+      ".local/share/contacts"
+      ".local/share/pimsync"
       {
-        directory = ".local/share/flatpak";
+        directory = ".local/state/aerc";
         mode = "0700";
       }
     ];
