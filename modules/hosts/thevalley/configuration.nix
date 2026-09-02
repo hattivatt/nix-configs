@@ -18,6 +18,7 @@
       zswap.enable = true;
       kernel.sysctl = {
         "vm.swappiness" = 180;
+        "net.ipv4.tcp_ecn" = "1";
       };
     };
     time.timeZone = "Asia/Ho_Chi_Minh";
@@ -47,6 +48,8 @@
         [ -n "$DNS1" ] && ${resolvectl} dns "$1" $DNS1 $DNS2
         ${resolvectl} domain "$1" "~zvq.me"
         ${resolvectl} default-route "$1" true
+        ${resolvectl} dnsovertls "$1" off
+        ${resolvectl} dnssec "$1" no
       '';
     };
     environment.etc."ppp/ip-down" = {

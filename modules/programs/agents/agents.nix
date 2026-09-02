@@ -25,9 +25,9 @@
       home.shellAliases = {
         pia = ''pi -p --model "opencode-go/deepseek-v4-flash"'';
       };
-      home.packages = with pkgs.llm-agents; [
-        opencode2
-        autolith
+      home.packages = with pkgs; [
+        llm-agents.opencode2
+        local.autolith
       ];
     };
 }

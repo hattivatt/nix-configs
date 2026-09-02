@@ -89,6 +89,8 @@
       libnotify
       devenv
       bubblewrap
+      glow
+      imagemagick
       local.autoskip
       local.calnotif
       local.change_wp
@@ -137,5 +139,9 @@
       SortOrder=ascending
       ThumbnailIconSize=128
     '';
+    programs.obs-studio = {
+      enable = true;
+      plugins = [ pkgs.obs-studio-plugins.obs-pipewire-audio-capture ];
+    };
   };
 }
