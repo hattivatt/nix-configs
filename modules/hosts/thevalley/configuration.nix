@@ -50,11 +50,6 @@
         ${resolvectl} default-route "$1" true
         ${resolvectl} dnsovertls "$1" off
         ${resolvectl} dnssec "$1" no
-        case "$1" in
-          ppp0)
-            /run/current-system/sw/bin/tc qdisc replace dev ppp0 root cake bandwidth 1.6mbit
-            ;;
-        esac
       '';
     };
     environment.etc."ppp/ip-down" = {

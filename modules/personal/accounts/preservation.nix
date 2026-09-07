@@ -3,6 +3,7 @@
     preservation.preserveAt."/persist".users.hattivatt.directories = [
       ".local/share/calendars"
       ".local/share/contacts"
+      ".local/share/mails"
       ".local/share/pimsync"
       {
         directory = ".local/state/aerc";

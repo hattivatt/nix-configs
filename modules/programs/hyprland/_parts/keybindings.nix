@@ -204,7 +204,7 @@ in
           {
             key = "l";
             desc = "Lock";
-            cmd = "hyprctl switchxkblayout all 0 && uwsm app -- hyprlock";
+            cmd = "hyprctl switchxkblayout all 0 && gpg-connect-agent reloadagent /bye && uwsm app -- hyprlock";
           }
           {
             key = "L";

@@ -29,6 +29,9 @@
       wcn = "sudo openfortivpn --config /home/hattivatt/.config/openfortivpn/config --saml-login --pppd-use-peerdns=1";
       wcnr = "sudo openfortivpn --config /home/hattivatt/.config/openfortivpn/config-res --saml-login --pppd-use-peerdns=1";
     };
+    home.sessionVariables = {
+      VAULT_SKIP_VERIFY = "true";
+    };
     programs.nushell = {
       enable = true;
       environmentVariables = {

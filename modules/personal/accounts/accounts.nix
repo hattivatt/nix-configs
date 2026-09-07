@@ -2,11 +2,18 @@
   flake.modules.homeManager.accounts =
   { pkgs, ... }:
   {
+    accounts.email.maildirBasePath = ".local/share/mails";
+    home.packages = [
+      pkgs.libsixel
+    ];
     programs = {
       khal.enable = true;
       pimsync.enable = true;
       khard.enable = true;
       w3m.enable = true;
+      mbsync = {
+        enable = true;
+      };
       aerc = {
         enable = true;
         extraConfig = {
@@ -14,9 +21,10 @@
           hooks.mail-received = ''notify-send "New mail from $AERC_FROM_NAME" "$AERC_SUBJECT"'';
           filters = {
             "text/plain" = "colorize";
-            "text/html" = "! w3m -I UTF-8 -T text/html";
+            "text/html" = "! html-unsafe -sixel";
           };
           viewer.show-images = true;
+          viewer.html-inline-images = true;
         };
       };
     };

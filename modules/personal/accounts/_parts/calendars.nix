@@ -1,6 +1,31 @@
 {
   accounts.calendar.basePath = ".local/share/calendars";
   accounts.calendar.accounts = {
+    personal = {
+      remote = {
+        type = "caldav";
+        url = "https://cloud.disroot.org";
+        userName = "hattivatt";
+        passwordCommand = [ "pass" "show" "Mails/disroot_cal" ];
+      };
+      pimsync = {
+        enable = true;
+        extraPairDirectives = [
+          {
+            name = "collection";
+            params = [
+              "personal"
+            ];
+          }
+        ];
+      };
+      khal = {
+        enable = true;
+        type = "discover";
+        color = "#795aab";
+        readOnly = false;
+      };
+    };
     russian_holidays = {
       remote = {
         type = "http";
