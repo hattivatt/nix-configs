@@ -93,6 +93,7 @@
       imagemagick
       local.autoskip
       local.calnotif
+      local.mailnotif
       local.change_wp
       local.check_subs
       local.device-manager

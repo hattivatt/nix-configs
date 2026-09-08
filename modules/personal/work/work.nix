@@ -18,6 +18,7 @@
     };
     home.packages = with pkgs; [
       local.teleport16
+      local.sofka
       openfortivpn
       fluxcd
       kubernetes-helm
