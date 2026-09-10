@@ -91,6 +91,7 @@
       bubblewrap
       glow
       imagemagick
+      libsixel
       local.autoskip
       local.calnotif
       local.mailnotif
@@ -139,6 +140,9 @@
       SortFolderFirst=true
       SortOrder=ascending
       ThumbnailIconSize=128
+    '';
+    xdg.configFile."autoskip/config.toml".text = ''
+      title_words = ["remix", "cover", "dj", "mix"]
     '';
     programs.obs-studio = {
       enable = true;

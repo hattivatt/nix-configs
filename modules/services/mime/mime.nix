@@ -15,6 +15,24 @@
         "application/xhtml+xml" = "zen-beta.desktop";
         "application/x-extension-xhtml" = "zen-beta.desktop";
         "application/x-extension-xht" = "zen-beta.desktop";
+        "image/png" = "imv.desktop";
+        "image/x-png" = "imv.desktop";
+        "image/jpeg" = "imv.desktop";
+        "image/jpg" = "imv.desktop";
+        "image/pjpeg" = "imv.desktop";
+        "image/gif" = "imv.desktop";
+        "image/webp" = "imv.desktop";
+        "image/bmp" = "imv.desktop";
+        "image/x-bmp" = "imv.desktop";
+        "image/tiff" = "imv.desktop";
+        "image/tiff-fx" = "imv.desktop";
+        "image/svg+xml" = "imv.desktop";
+        "image/avif" = "imv.desktop";
+        "image/heif" = "imv.desktop";
+        "image/jxl" = "imv.desktop";
+        "image/qoi" = "imv.desktop";
+        "image/x-farbfeld" = "imv.desktop";
+        "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";
       };
       associations.added = {
         "x-scheme-handler/slack" = "slack.desktop";
