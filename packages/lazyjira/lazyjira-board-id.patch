@@ -1,0 +1,33 @@
+diff --git a/pkg/config/config.go b/pkg/config/config.go
+index 273ed8c..ed943d7 100644
+--- a/pkg/config/config.go
++++ b/pkg/config/config.go
+@@ -205,7 +205,7 @@ type TLSConfig struct {
+ 
+ type ProjectConfig struct {
+ 	Key     string `yaml:"key"`
+-	BoardID int    `yaml:"boardId"` // TODO not yet wired up
++	BoardID int    `yaml:"boardId"`
+ }
+ 
+ // UnmarshalYAML lets `projects:` accept either the full mapping form
+diff --git a/pkg/tui/handlers_data.go b/pkg/tui/handlers_data.go
+index 1893a9b..fc9826e 100644
+--- a/pkg/tui/handlers_data.go
++++ b/pkg/tui/handlers_data.go
+@@ -231,6 +231,15 @@ func (a *App) invalidateInFlight() {
+ 
+ func (a *App) resolveBoardID() {
+ 	a.boardID = 0
++	// Configured project boards win: boards that are not attached to a
++	// project (e.g. filter-based) carry no location, so the API-derived
++	// lookup below cannot find them.
++	for _, p := range a.cfg.Projects {
++		if p.Key == a.projectKey && p.BoardID != 0 {
++			a.boardID = p.BoardID
++			return
++		}
++	}
+ 	for _, b := range a.boards {
+ 		if b.ProjectKey == a.projectKey {
+ 			a.boardID = b.ID

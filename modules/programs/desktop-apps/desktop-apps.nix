@@ -97,6 +97,7 @@
       local.mailnotif
       local.change_wp
       local.check_subs
+      local.contacts
       local.device-manager
       local.downloads_clear
       local.hide_all

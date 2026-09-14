@@ -4,6 +4,7 @@
       ".cache/terragrunt"
       ".kube"
       ".tenv"
+      ".config/lazyjira"
     ];
   };
 }

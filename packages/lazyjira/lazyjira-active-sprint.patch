@@ -1,0 +1,200 @@
+diff --git a/pkg/tui/app.go b/pkg/tui/app.go
+index 177f4ef..38acb1b 100644
+--- a/pkg/tui/app.go
++++ b/pkg/tui/app.go
+@@ -172,6 +172,7 @@ type App struct {
+ 	projectID       string
+ 	boardID         int
+ 	boards          []jira.Board
++	activeSprints   map[string]int
+ 	showHelp        bool
+ 	helpCursor      int
+ 	helpSearching   bool
+@@ -424,6 +425,7 @@ func (a *App) Shutdown() {
+ }
+ 
+ func (a *App) Init() tea.Cmd {
++	a.resolveBoardID()
+ 	cmds := []tea.Cmd{
+ 		fetchMyself(a.client),
+ 		fetchFieldDiscovery(a.client),
+@@ -436,6 +438,11 @@ func (a *App) Init() tea.Cmd {
+ 	if cmd := a.fetchActiveTab(); cmd != nil {
+ 		cmds = append(cmds, cmd)
+ 	}
++	// With a preset project the first tab fetch races the sprint lookup, so
++	// resolve the active sprint right away when a tab needs it.
++	if a.projectKey != "" && a.boardID != 0 && a.tabNeedsActiveSprint() {
++		cmds = append(cmds, fetchActiveSprint(a.client, a.boardID, a.projectKey))
++	}
+ 	return tea.Batch(cmds...)
+ }
+ 
+@@ -500,6 +507,8 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+ 		return a.handleBoardsLoaded(msg)
+ 	case sprintsLoadedMsg:
+ 		return a.handleSprintsLoaded(msg)
++	case activeSprintLoadedMsg:
++		return a.handleActiveSprintLoaded(msg)
+ 	case prefetchUsersMsg:
+ 		if msg.projectKey == a.projectKey {
+ 			if _, ok := a.usersCache[msg.projectKey]; !ok {
+@@ -1163,8 +1172,13 @@ func (a *App) fetchActiveTab() tea.Cmd {
+ 	if tab.JQL == "" {
+ 		return nil
+ 	}
++	// The first fetch of a tab using {{.ActiveSprint}} waits for the sprint
++	// lookup instead of issuing a doomed sprint = 0 search.
++	if a.activeSprint() == 0 && a.tabNeedsActiveSprint() {
++		return nil
++	}
+ 	tabIdx := a.issuesList.GetTabIndex()
+-	jql := resolveTabJQL(tab, a.projectKey, a.cfg.Jira.Email)
++	jql := resolveTabJQL(tab, a.projectKey, a.cfg.Jira.Email, a.activeSprint())
+ 	*a.logFlag = true
+ 	return fetchIssuesByJQL(a.client, jql, tabIdx, a.cfg.ResolveMaxResults(tab))
+ }
+diff --git a/pkg/tui/commands.go b/pkg/tui/commands.go
+index 8cf4b9b..685dbad 100644
+--- a/pkg/tui/commands.go
++++ b/pkg/tui/commands.go
+@@ -64,15 +64,16 @@ func fetchIssuesByJQL(client jira.ClientInterface, jql string, tab, maxResults i
+ }
+ 
+ // resolveTabJQL applies template variables to a tab's JQL string.
+-func resolveTabJQL(tab config.IssueTabConfig, projectKey, email string) string {
++func resolveTabJQL(tab config.IssueTabConfig, projectKey, email string, activeSprint int) string {
+ 	tmpl, err := template.New("jql").Parse(tab.JQL)
+ 	if err != nil {
+ 		return fmt.Sprintf("project = \"%s\" ORDER BY updated DESC", projectKey)
+ 	}
+ 	data := struct {
+-		ProjectKey string
+-		UserEmail  string
+-	}{ProjectKey: "\"" + projectKey + "\"", UserEmail: email}
++		ProjectKey   string
++		UserEmail    string
++		ActiveSprint int
++	}{ProjectKey: "\"" + projectKey + "\"", UserEmail: email, ActiveSprint: activeSprint}
+ 	var buf bytes.Buffer
+ 	if err := tmpl.Execute(&buf, data); err != nil {
+ 		return fmt.Sprintf("project = \"%s\" ORDER BY updated DESC", projectKey)
+@@ -80,6 +81,32 @@ func resolveTabJQL(tab config.IssueTabConfig, projectKey, email string) string {
+ 	return buf.String()
+ }
+ 
++// activeSprintLoadedMsg carries the resolved active sprint id for a project.
++type activeSprintLoadedMsg struct {
++	projectKey string
++	sprintID   int
++}
++
++// fetchActiveSprint resolves the active sprint of a board for the
++// {{.ActiveSprint}} template variable. A zero id means no active sprint.
++func fetchActiveSprint(client jira.ClientInterface, boardID int, projectKey string) tea.Cmd {
++	return func() tea.Msg {
++		if boardID == 0 {
++			return activeSprintLoadedMsg{projectKey: projectKey}
++		}
++		sprints, err := client.GetSprints(context.Background(), boardID)
++		if err != nil {
++			return activeSprintLoadedMsg{projectKey: projectKey}
++		}
++		for _, s := range sprints {
++			if s.State == "active" {
++				return activeSprintLoadedMsg{projectKey: projectKey, sprintID: s.ID}
++			}
++		}
++		return activeSprintLoadedMsg{projectKey: projectKey}
++	}
++}
++
+ // fetchFullIssue fetches issue + comments + changelog, returning the given message type.
+ func fetchFullIssue(client jira.ClientInterface, key string, mkMsg func(*jira.Issue) tea.Msg) tea.Cmd {
+ 	return func() tea.Msg {
+diff --git a/pkg/tui/handlers.go b/pkg/tui/handlers.go
+index 5ec0b6e..10de543 100644
+--- a/pkg/tui/handlers.go
++++ b/pkg/tui/handlers.go
+@@ -74,6 +74,9 @@ func (a *App) handleAutoFetch() (tea.Model, tea.Cmd) {
+ 	if cmd := a.fetchActiveTab(); cmd != nil {
+ 		cmds = append(cmds, cmd)
+ 	}
++	if a.projectKey != "" && a.boardID != 0 && a.tabNeedsActiveSprint() {
++		cmds = append(cmds, fetchActiveSprint(a.client, a.boardID, a.projectKey))
++	}
+ 	cmds = append(cmds, tea.Tick(30*time.Second, func(t time.Time) tea.Msg {
+ 		return autoFetchTickMsg{}
+ 	}))
+@@ -95,10 +98,12 @@ func (a *App) selectProject(p *jira.Project) tea.Cmd {
+ 	if !a.demoMode {
+ 		go saveLastProject(p.Key)
+ 	}
++	var cmds []tea.Cmd
+ 	if _, ok := a.usersCache[p.Key]; !ok {
+-		return prefetchUsers(p.Key)
++		cmds = append(cmds, prefetchUsers(p.Key))
+ 	}
+-	return nil
++	cmds = append(cmds, fetchActiveSprint(a.client, a.boardID, p.Key))
++	return tea.Batch(cmds...)
+ }
+ 
+ // routeToPanel forwards input to the focused panel.
+diff --git a/pkg/tui/handlers_data.go b/pkg/tui/handlers_data.go
+index fc9826e..f44552d 100644
+--- a/pkg/tui/handlers_data.go
++++ b/pkg/tui/handlers_data.go
+@@ -290,6 +290,34 @@ func (a *App) handleSprintsLoaded(msg sprintsLoadedMsg) (tea.Model, tea.Cmd) {
+ 	return a, nil
+ }
+ 
++// tabNeedsActiveSprint reports whether the active tab's JQL uses the
++// {{.ActiveSprint}} template variable.
++func (a *App) tabNeedsActiveSprint() bool {
++	tab := a.issuesList.ActiveTab()
++	return strings.Contains(tab.JQL, "ActiveSprint")
++}
++
++// activeSprint returns the cached active sprint id for the current project.
++func (a *App) activeSprint() int {
++	if a.activeSprints == nil {
++		return 0
++	}
++	return a.activeSprints[a.projectKey]
++}
++
++// handleActiveSprintLoaded caches the resolved active sprint id and refreshes
++// the tab when it fetched before the id was known.
++func (a *App) handleActiveSprintLoaded(msg activeSprintLoadedMsg) (tea.Model, tea.Cmd) {
++	if a.activeSprints == nil {
++		a.activeSprints = make(map[string]int)
++	}
++	a.activeSprints[msg.projectKey] = msg.sprintID
++	if msg.projectKey == a.projectKey && a.tabNeedsActiveSprint() {
++		return a, a.fetchActiveTab()
++	}
++	return a, nil
++}
++
+ // handleLabelsLoaded shows the labels checklist modal
+ func (a *App) handleLabelsLoaded(msg labelsLoadedMsg) (tea.Model, tea.Cmd) {
+ 	sel := a.issuesList.SelectedIssue()
+@@ -385,7 +413,7 @@ func (a *App) handleProjectsLoaded(msg projectsLoadedMsg) (tea.Model, tea.Cmd) {
+ 		a.statusPanel.SetProject(a.projectKey)
+ 		a.projectList.SetActiveKey(a.projectKey)
+ 		a.resolveBoardID()
+-		return a, a.fetchActiveTab()
++		return a, tea.Batch(a.fetchActiveTab(), fetchActiveSprint(a.client, a.boardID, a.projectKey))
+ 	}
+ 	return a, nil
+ }
+@@ -493,7 +521,7 @@ func (a *App) handleCreateMetaLoaded(msg createMetaLoadedMsg) (tea.Model, tea.Cm
+ 	if a.cfg.GUI.ShouldPrefillFromTab() {
+ 		tab := a.issuesList.ActiveTab()
+ 		if tab.JQL != "" {
+-			jql := resolveTabJQL(tab, a.projectKey, a.cfg.Jira.Email)
++			jql := resolveTabJQL(tab, a.projectKey, a.cfg.Jira.Email, a.activeSprint())
+ 			prefill := ParseJQLPrefill(jql)
+ 			ApplyPrefill(fields, prefill, a.currentUser, a.isCloud)
+ 		}

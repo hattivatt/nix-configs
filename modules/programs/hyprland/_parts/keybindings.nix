@@ -188,6 +188,11 @@ in
             desc = "Bluetooth devices";
             cmd = "uwsm app -- device-manager bt";
           }
+          {
+            key = "c";
+            desc = "Contacts";
+            cmd = "uwsm app -- contacts";
+          }
         ]))))
         (bind "M" (submap "reset"))
         (bind "Q" (exec (lib.getExe (mkMenu [

@@ -26,6 +26,7 @@
         viewer.show-images = true;
         viewer.html-inline-images = true;
         viewer.alternatives = "text/html,text/plain";
+        ui.dirlist-right = ''{{if and .Unread (ne .Folder "Trash")}}{{humanReadable .Unread}}{{end}}'';
       };
       extraBinds = {
         global = {
@@ -195,10 +196,10 @@
     };
     xdg.configFile."aerc/query-map".text = ''
       Inbox=tag:inbox and not tag:deleted
-      Unread=tag:unread
+      Unread=tag:unread and not tag:trash
       Keep=tag:keep
       Sent=tag:sent
-      Lists=tag:lists and tag:unread
+      Lists=tag:lists and tag:unread and not tag:trash
       gmail-ax=tag:gmail-ax and not tag:trash
       disroot=tag:disroot and not tag:trash
       gmail-ht=tag:gmail-ht and not tag:trash

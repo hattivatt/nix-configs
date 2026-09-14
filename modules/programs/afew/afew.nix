@@ -45,7 +45,7 @@
         tags = +trash;-inbox;-new
 
         [Filter.8]
-        query = query = folder:"/^.*/Trash$/"
+        query = folder:"/^.*/Trash$/"
         tags = +trash;-inbox;-new
       '';
     };
