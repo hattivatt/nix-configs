@@ -1,8 +1,8 @@
 {
-  flake.modules.homeManager.mime = {
+  flake.modules.homeManager.aerc = {
     my.persist.directories = [
       {
-        directory = ".local/share/mime";
+        directory = ".local/state/aerc";
         mode = "0700";
       }
     ];

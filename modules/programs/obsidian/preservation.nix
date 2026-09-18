@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.obsidian = {
+    my.persist.directories = [
       ".config/obsidian"
       "Notes"
     ];

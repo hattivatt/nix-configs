@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.chats = {
+    my.persist.directories = [
       ".config/Mattermost"
       ".config/Slack"
       ".config/vesktop"

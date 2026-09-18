@@ -1,14 +1,10 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.accounts = {
+    my.persist.directories = [
       ".local/share/calendars"
       ".local/share/contacts"
       ".local/share/mails"
       ".local/share/pimsync"
-      {
-        directory = ".local/state/aerc";
-        mode = "0700";
-      }
     ];
   };
 }

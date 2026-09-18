@@ -4,32 +4,32 @@
   { pkgs, ... }:
   {
     imports = with inputs.self.modules.nixos; [
-      system-desktop
+      system-server
       systemd-boot
-      bluetooth
-      networkmanager
       preservation
     ];
     boot = {
-      kernelPackages = pkgs.linuxPackages_zen;
-      zswap.enable = true;
       kernel.sysctl = {
         "vm.swappiness" = 180;
       };
     };
-    time.timeZone = "Asia/Ho_Chi_Minh";
-    programs.appimage = {
-      enable = true;
-      binfmt = true;
-    };
+    environment.etc."machine-id".text = "159215926431405f8d36f0817ff2dac9";
+    zramSwap.enable = true;
     programs.gnupg.agent = {
       enable = true;
-      pinentryPackage = with pkgs; pinentry-qt;
+      pinentryPackage = with pkgs; pinentry-tty;
     };
-    security.sudo.extraConfig = ''
-      Defaults pwfeedback
-      Defaults lecture=never
-    '';
+    services.openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
+    networking.nftables.enable = true;
+    security.sudo = {
+      wheelNeedsPassword = false;
+    };
   };
 }
-

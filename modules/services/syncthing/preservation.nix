@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.syncthing = {
+    my.persist.directories = [
       {
         directory = ".local/state/syncthing";
         mode = "0700";

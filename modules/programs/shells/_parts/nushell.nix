@@ -83,7 +83,7 @@
               }
               {
                   name: herdr
-                  modifier: control
+                  modifier: alt
                   keycode: char_h
                   mode: [emacs, vi_normal, vi_insert]
                   event: {

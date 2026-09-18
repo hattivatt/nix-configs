@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.keys = {
+    my.persist.directories = [
       ".config/sops"
       {
         directory = ".local/share/gnupg";

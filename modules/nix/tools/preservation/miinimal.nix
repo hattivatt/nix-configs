@@ -1,5 +1,6 @@
 {
   flake.modules.nixos.preservation =
+  { config, lib, ... }:
   {
     preservation = {
       enable = true;
@@ -12,31 +13,19 @@
             directory = "/var/lib/nixos";
             inInitrd = true;
           }
-        ];
-        files = [
-          {
-            file = "/etc/machine-id";
-            inInitrd = true;
-            how = "symlink";
-            configureParent = true;
-          }
-        ];
+        ] ++ config.my.persist.directories;
+        files = config.my.persist.files;
         users.hattivatt = {
           directories = [
-            "Downloads"
-            "Documents"
-            "Pictures"
-            "Projects"
             ".nixos"
-            ".config/Exodus"
-            ".config/kdeconnect"
-            ".config/spotify"
             {
               directory = ".ssh";
               mode = "0700";
             }
-            ".steam"
-          ];
+          ] ++ lib.optionals (config.home-manager ? users.hattivatt)
+        config.home-manager.users.hattivatt.my.persist.directories;
+          files = lib.optionals (config.home-manager ? users.hattivatt)
+        config.home-manager.users.hattivatt.my.persist.files;
         };
       };
     };

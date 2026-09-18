@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.hyprland = {
+    my.persist.directories = [
       {
         directory = ".local/share/hyprland";
         mode = "0700";

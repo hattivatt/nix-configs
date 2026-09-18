@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.files = [
+  flake.modules.homeManager.fuzzel = {
+    my.persist.files = [
       ".cache/fuzzel"
     ];
   };

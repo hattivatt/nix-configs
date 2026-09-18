@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.helium = {
+    my.persist.directories = [
       ".config/helium"
       ".config/net.imput.helium"
     ];

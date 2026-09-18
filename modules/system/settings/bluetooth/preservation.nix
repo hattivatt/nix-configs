@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".directories = [
+  flake.modules.nixos.bluetooth = {
+    my.persist.directories = [
       "/var/lib/bluetooth"
     ];
   };

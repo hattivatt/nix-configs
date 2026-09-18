@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.shells = {
+    my.persist.directories = [
       ".config/nushell"
       ".config/zsh"
       ".local/share/zoxide"

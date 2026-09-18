@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.qbittorrent = {
+    my.persist.directories = [
       ".local/share/qBittorrent"
     ];
   };

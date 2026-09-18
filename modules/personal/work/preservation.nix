@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.work = {
+    my.persist.directories = [
       ".cache/terragrunt"
       ".kube"
       ".tenv"

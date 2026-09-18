@@ -12,6 +12,7 @@
       bluetooth
       networkmanager
       preservation
+      virt-manager
     ];
     boot = {
       kernelPackages = pkgs.linuxPackages_zen;

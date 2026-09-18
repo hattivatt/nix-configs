@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".directories = [
+  flake.modules.nixos.greetd = {
+    my.persist.directories = [
       {
         directory = "/var/cache/tuigreet";
         group = "greeter";

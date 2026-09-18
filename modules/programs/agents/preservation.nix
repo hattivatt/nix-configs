@@ -1,6 +1,6 @@
 {
-  flake.modules.nixos.preservation = {
-    preservation.preserveAt."/persist".users.hattivatt.directories = [
+  flake.modules.homeManager.agents = {
+    my.persist.directories = [
       ".config/pi"
       ".config/opencode"
       ".config/autolith"
