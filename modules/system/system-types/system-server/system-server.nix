@@ -7,6 +7,8 @@
       agents
       rebuild
       docker
+      caddy
+      sops
     ];
   };
   flake.modules.homeManager.system-server = {

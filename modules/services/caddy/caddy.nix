@@ -4,9 +4,10 @@
   {
     services.caddy = {
       enable = true;
+      openFirewall = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
-        hash = "sha256-0Csi6WmyoGj7bXeo2Lrnwr0SCoV6c/niymtOp5DdiT4=";
+        hash = "sha256-7GoH8YLCoPmPExQxoga2FHB58zQDoZVf1BBwkVi0SsQ=";
       };
     };
   };

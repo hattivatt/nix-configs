@@ -34,7 +34,7 @@
     pkgs-by-name-for-flake-parts.url = "github:drupol/pkgs-by-name-for-flake-parts";
     preservation.url = "github:nix-community/preservation";
     secrets = {
-      url = "path:./secrets/secrets.yaml";
+      url = "path:./secrets";
       flake = false;
     };
     self.submodules = true;

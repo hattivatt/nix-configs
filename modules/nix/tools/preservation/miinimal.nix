@@ -8,7 +8,6 @@
         directories = [
           "/var/lib/systemd"
           "/var/log"
-          "/etc/ssh"
           {
             directory = "/var/lib/nixos";
             inInitrd = true;

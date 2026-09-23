@@ -6,7 +6,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     secrets = {
-      url = "path:./secrets/secrets.yaml";
+      url = "path:./secrets";
       flake = false;
     };
   };

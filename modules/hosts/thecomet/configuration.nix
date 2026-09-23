@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.modules.nixos.hearth =
+  flake.modules.nixos.thecomet =
   { pkgs, inputs, ... }:
   {
     imports = with inputs.self.modules.nixos; [

@@ -143,7 +143,7 @@
       ThumbnailIconSize=128
     '';
     xdg.configFile."autoskip/config.toml".text = ''
-      title_words = ["remix", "cover", "dj", "mix"]
+      title_words = ["remix", "cover", "mix"]
     '';
     programs.obs-studio = {
       enable = true;

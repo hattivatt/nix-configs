@@ -407,11 +407,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "path": "./secrets/secrets.yaml",
+        "path": "./secrets",
         "type": "path"
       },
       "original": {
-        "path": "./secrets/secrets.yaml",
+        "path": "./secrets",
         "type": "path"
       },
       "parent": []

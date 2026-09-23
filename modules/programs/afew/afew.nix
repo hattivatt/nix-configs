@@ -45,6 +45,10 @@
         tags = +trash;-inbox;-new
 
         [Filter.8]
+        query = from:support@cloud.ru or to:support@cloud.ru
+        tags = +cloud;-inbox;-new
+
+        [Filter.9]
         query = folder:"/^.*/Trash$/"
         tags = +trash;-inbox;-new
       '';

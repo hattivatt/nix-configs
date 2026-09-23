@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.hearth =
+  flake.modules.nixos.thecomet =
   { config, ... }:
   {
     sops = {
@@ -7,7 +7,6 @@
     };
     services.caddy = {
       environmentFile = config.sops.secrets.cf_token.path;
-      acmeCA = "https://acme-staging-v02.api.letsencrypt.org/directory";
       virtualHosts."*.hattivatt.fyi".extraConfig = ''
         tls {
             dns cloudflare {env.CLOUDFLARE_API_TOKEN}
