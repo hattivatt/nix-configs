@@ -19,6 +19,7 @@
       theme
       syncthing
       foundryvtt
+      serverkeys
     ];
   };
 }

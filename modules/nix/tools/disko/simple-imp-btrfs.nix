@@ -5,6 +5,7 @@
     imports = with inputs.self.modules.nixos; [
       disko-common
     ];
+    boot.loader.efi.canTouchEfiVariables = true;
     fileSystems."/persist".neededForBoot = true;
     fileSystems."/nix".neededForBoot = true;
     disko.devices.nodev = {
