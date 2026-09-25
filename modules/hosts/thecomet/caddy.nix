@@ -14,12 +14,14 @@
 
         @foundryvtt host foundryvtt.hattivatt.fyi
         handle @foundryvtt {
-            reverse_proxy localhost:30000
+          reverse_proxy localhost:30000
         }
 
         @syncthing host syncthing.hattivatt.fyi
         handle @syncthing{
-            reverse_proxy localhost:8384
+          reverse_proxy 127.0.0.1:8384 {
+              header_up Host localhost:8384
+          }
         }
 
         handle {

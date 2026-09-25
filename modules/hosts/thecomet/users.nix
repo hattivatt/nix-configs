@@ -27,6 +27,7 @@
         imports = with inputs.self.modules.homeManager; [
           system-server
         ];
+        dconf.enable = false;
         sops.defaultSopsFile = "${inputs.secrets}/server.yaml";
       };
     };

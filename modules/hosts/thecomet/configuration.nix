@@ -12,6 +12,12 @@
       kernel.sysctl = {
         "vm.swappiness" = 180;
       };
+      initrd.availableKernelModules = [
+        "virtio_pci"
+        "virtio_blk"
+        "virtio_scsi"
+        "virtio_net"
+      ];
     };
     environment.etc."machine-id".text = "159215926431405f8d36f0817ff2dac9";
     zramSwap.enable = true;
@@ -27,6 +33,7 @@
         PermitRootLogin = "no";
       };
     };
+    services.syncthing.openDefaultPorts = true;
     sops = {
       defaultSopsFile = "${inputs.secrets}/server.yaml";
     };

@@ -36,6 +36,7 @@
             versioning.type = "simple";
             devices = [
               "thevalley"
+              "thecomet"
             ];
           };
         };

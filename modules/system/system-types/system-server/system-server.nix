@@ -9,6 +9,7 @@
       docker
       caddy
       sops
+      server-apps
     ];
   };
   flake.modules.homeManager.system-server = {
@@ -20,6 +21,7 @@
       syncthing
       foundryvtt
       serverkeys
+      server-apps
     ];
   };
 }

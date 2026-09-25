@@ -98,7 +98,7 @@
           }
         ];
         legacy_commands = false;
-        new_notes_location = "1Inbox";
+        new_notes_location = "notes_subdir";
         picker = {
           name = "telescope.nvim";
           note_mappings = {

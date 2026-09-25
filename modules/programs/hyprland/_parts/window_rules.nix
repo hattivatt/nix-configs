@@ -4,6 +4,7 @@
       window_rule = [
         {match = {class = "obsidian";}; workspace = "10 silent";}
         {match = {class = "md.Obsidian";}; workspace = "10 silent";}
+        {match = {class = "md.obsidian.Obsidian";}; workspace = "10 silent";}
         {match = {class = "zen";}; workspace = "1 silent";}
         {match = {class = "zen-beta";}; workspace = "1 silent";}
         {match = {class = "zen-beta";}; scrolling_width = 1;}
