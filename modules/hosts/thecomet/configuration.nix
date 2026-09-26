@@ -52,8 +52,8 @@
       matchConfig.Name = "eth0";
       address = [ "203.25.119.37/24" "2403:2c81:2000:2143::a/64" ];
       routes = [
-        { routeConfig = { Gateway = "203.25.119.1"; }; }
-        { routeConfig = { Gateway = "2403:2c81:2000::1"; GatewayOnLink = true; }; }
+        { Gateway = "203.25.119.1"; }
+        { Gateway = "2403:2c81:2000::1"; GatewayOnLink = true; }
       ];
       networkConfig.IPv6AcceptRA = false;
     };

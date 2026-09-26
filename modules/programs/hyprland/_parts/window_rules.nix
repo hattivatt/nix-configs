@@ -23,7 +23,7 @@
         {match = {title = "^(Copy Files.*)$";}; float = true;}
         {match = {title = "^(Media viewer)$";}; float = true; fullscreen = true;}
         {match = {class = "org.gnupg.pinentry-qt";}; float = true; stay_focused = true;}
-        {match = {class = "imv ";};float = true;}
+        {match = {class = "imv";};float = true;}
         {match = {class = "org.kde.polkit-kde-authentication-agent-1";}; float = true;}
         {match = {class = "com.gabm.satty ";}; float = true;}
         {match = {class = "xdg-desktop-portal-gtk ";};float = true;}

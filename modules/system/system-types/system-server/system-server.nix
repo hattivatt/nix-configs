@@ -10,6 +10,7 @@
       caddy
       sops
       server-apps
+      mtproxy
     ];
   };
   flake.modules.homeManager.system-server = {

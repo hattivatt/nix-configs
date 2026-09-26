@@ -26,6 +26,7 @@
             devices = [
               "thevalley"
               "Pixel 9"
+              "thecomet"
             ];
             ignorePatterns = [
               ".obsidian"

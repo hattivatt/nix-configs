@@ -12,6 +12,7 @@
           isNormalUser = true;
           createHome = true;
           hashedPassword = "!";
+          linger = true;
           openssh.authorizedKeys.keys = [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG9KxAw6E4ZY82Hh83tQUBcomPanlJ6pvIURZnULzDK3"
           ];

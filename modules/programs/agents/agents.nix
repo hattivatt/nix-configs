@@ -13,6 +13,9 @@
   flake.modules.homeManager.agents =
     { config, pkgs, ... }:
     {
+      sops = {
+        secrets."agents/opencode" = { };
+      };
       programs.opencode = {
         enable = true;
         package = pkgs.llm-agents.opencode;
@@ -29,5 +32,8 @@
         llm-agents.opencode2
         local.autolith
       ];
+      programs.nushell.extraEnv = ''
+        $env.OPENCODE_API_KEY = (open ${config.sops.secrets."agents/opencode".path} | str trim)
+      '';
     };
 }
