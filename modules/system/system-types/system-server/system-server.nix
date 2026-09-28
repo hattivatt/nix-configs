@@ -11,6 +11,7 @@
       sops
       server-apps
       mtproxy
+      actualbudget
     ];
   };
   flake.modules.homeManager.system-server = {

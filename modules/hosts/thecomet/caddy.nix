@@ -17,6 +17,12 @@
           reverse_proxy localhost:30000
         }
 
+        @actual host actual.hattivatt.fyi
+        handle @actual {
+          encode gzip zstd
+          reverse_proxy localhost:3000
+        }
+
         @syncthing host syncthing.hattivatt.fyi
         handle @syncthing{
           reverse_proxy 127.0.0.1:8384 {
