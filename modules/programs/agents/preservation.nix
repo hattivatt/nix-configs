@@ -12,4 +12,18 @@
       ".local/state/opencode"
     ];
   };
+  flake.modules.nixos.hermes = {
+    my.persist.directories = [
+      {
+        directory = "/var/lib/hermes";
+        group = "hermes";
+        user = "hermes";
+        configureParent = true;
+        parent = {
+          group = "hermes";
+          user = "hermes";
+        };
+      }
+    ];
+  };
 }

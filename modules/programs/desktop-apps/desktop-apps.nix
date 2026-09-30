@@ -109,6 +109,7 @@
       local.vaultsearch
       local.workbackup
       local.zkn
+      local.callrec
     ];
     home.file.".gtk-bookmarks".text = ''
       file:///home/hattivatt/Downloads/Temporary Temporary

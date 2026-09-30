@@ -7,6 +7,7 @@
       system-server
       systemd-boot
       preservation
+      hermes
     ];
     boot = {
       kernel.sysctl = {

@@ -24,7 +24,7 @@
     services.gpg-agent = {
       enable = true;
       defaultCacheTtl = 3600;
-      maxCacheTtl = 28800;
+      maxCacheTtl = 36000;
     };
     home.activation.importGpgKey = lib.hm.dag.entryAfter ["writeBoundary"] ''
       KEY_ID="9D25146C5C6D7CD16598853D7812F348399C7FF2"

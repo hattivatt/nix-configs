@@ -50,6 +50,7 @@
       udisks
       mime
       qbittorrent
+      ssh
     ];
   };
 }
