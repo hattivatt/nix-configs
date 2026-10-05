@@ -25,9 +25,10 @@ if vault token lookup &> /dev/null ; then
     fi
   done
 
-  key=$(vault kv get "${secpath}" | tail -n +15 | awk '{ print $1 }' | pick "key")
+  secret=$(vault kv get -format=json "${secpath}")
+  key=$(printf '%s' "${secret}" | jq -r '.data.data | keys[]' | pick "key")
 
-  vault kv get -field="${key}" "${secpath}" | wl-copy
+  printf '%s' "${secret}" | jq -r --arg key "${key}" '.data.data[$key]' | wl-copy
 else
   echo "Not logged in to vault"
   exit 2

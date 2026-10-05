@@ -33,7 +33,7 @@
   lib,
 }:
 let
-  version = "0.51.0";
+  version = "0.58.0";
   platform = "x86_64-linux";
   release = "v${version}";
   releaseName = "${release}-${platform}";
@@ -46,7 +46,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/lambda-symbolics/autolith/releases/download/${release}/autolith-${release}-${platform}.tar.gz";
-      hash = "sha256-T54p6YeAMVFxxU2PsJTaHBg9a7iFp0NcNgJU4Aj6aIA=";
+      hash = "sha256-747YKp211Z3i+hv8/E4TKq1+VazMKXn9riMSx/g7IDc=";
     };
 
     sourceRoot = "autolith-${release}-${platform}";
@@ -68,11 +68,6 @@ let
       runHook preInstall
       mkdir -p "$out/releases/${releaseName}" "$out/bin"
       cp -r . "$out/releases/${releaseName}/"
-      # The per-machine build (build-sandbox.lisp) probe-files
-      # CL_EXEC_SANDBOX_PROCESS_GROUP_HELPER and errors on a wild/glob
-      # pathname, so stage the prebuilt helper at a literal path.
-      cp "$out/releases/${releaseName}/libexec/autolith/.qlot/dists/cl-exec-sandbox/software/cl-exec-sandbox-ref-"*/build/cl-exec-sandbox-process-group \
-        "$out/releases/${releaseName}/libexec/cl-exec-sandbox-process-group"
       ln -s "releases/${releaseName}" "$out/current"
       ln -s ../current/bin/autolith "$out/bin/autolith"
       runHook postInstall

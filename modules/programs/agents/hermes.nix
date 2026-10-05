@@ -30,6 +30,7 @@
             FOUNDRY_URL = "http://localhost:30000";
             FOUNDRY_USERNAME = "clanker";
             FOUNDRY_PASSWORD = "\${FOUNDRY_PASSWORD}";
+            FOUNDRY_WRITE_ENABLED = "true";
           };
         };
         actual-budget-mcp-usd = {

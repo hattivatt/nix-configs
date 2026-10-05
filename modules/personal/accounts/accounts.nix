@@ -11,6 +11,7 @@
       mbsync = {
         enable = true;
       };
+      msmtp.enable = true;
     };
     systemd.user.services = {
       calnotif = {

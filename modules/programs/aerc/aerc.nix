@@ -80,8 +80,8 @@
           zt = ":align top<Enter>";
           zb = ":align bottom<Enter>";
           "<Enter>" = ":view<Enter>";
-          d = ":modify-labels +trash -inbox -keep -unread<Enter>";
-          D = ":modify-labels +trash -inbox -keep -unread<Enter>";
+          d = ":modify-labels +trash -inbox -unread<Enter>";
+          D = ":modify-labels +trash -inbox -unread<Enter>";
           a = ":archive flat<Enter>";
           A = ":unmark -a<Enter>:mark -T<Enter>:archive flat<Enter>";
           C = ":compose<Enter>";
