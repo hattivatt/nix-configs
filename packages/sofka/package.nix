@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  version = "0.25.3";
+  version = "0.31.3";
 
   # Апстрим кладёт package.nix рядом с Cargo.toml и Cargo.lock, поэтому его
   # ссылки на . / (lib.cleanSource ./. и cargoLock.lockFile) резолвятся внутрь
@@ -9,7 +9,7 @@ let
     owner = "nklmilojevic";
     repo = "sofka";
     rev = "v${version}";
-    hash = "sha256-e/+cdD8B+yE4tQzk73LdUbAX9ULKn4XJyoBUYb3fVOs=";
+    hash = "sha256-ITcJ4OcEBPcsvOpC0I82h0X4Ewd3iv3wAr50RdYb+dU=";
   };
 in
 pkgs.callPackage (src + "/package.nix") { }

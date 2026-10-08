@@ -88,7 +88,7 @@
                   mode: [emacs, vi_normal, vi_insert]
                   event: {
                       send: executehostcommand
-                      cmd: "herdr"
+                      cmd: "herdr --remote thecomet"
                   }
               }
           ]

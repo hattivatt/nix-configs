@@ -32,6 +32,17 @@
               ".obsidian"
             ];
           };
+          "${config.home.homeDirectory}/Projects" = {
+            label = "work";
+            versioning.type = "simple";
+            devices = [
+              "thevalley"
+              "thecomet"
+            ];
+            ignorePatterns = [
+              "work"
+            ];
+          };
           "${config.xdg.dataHome}/FoundryVTT/common" = {
             label = "Foundry";
             versioning.type = "simple";
