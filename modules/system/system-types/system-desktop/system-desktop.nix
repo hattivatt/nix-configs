@@ -23,7 +23,7 @@
       chats
       desktop-apps
       desktop-envs
-      fbreader
+      koreader
       flatpak
       flyctl
       foot

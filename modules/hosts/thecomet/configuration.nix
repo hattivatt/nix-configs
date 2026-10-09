@@ -8,6 +8,9 @@
       systemd-boot
       preservation
       hermes
+      calibre
+      kosync
+      koinsight
     ];
     boot = {
       kernel.sysctl = {

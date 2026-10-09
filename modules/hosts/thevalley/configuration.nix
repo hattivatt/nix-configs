@@ -40,6 +40,9 @@
       Defaults pwfeedback
       Defaults lecture=never
     '';
+    fonts.packages = with pkgs; [
+      local.fast-font
+    ];
     environment.etc."ppp/ip-up" = {
       mode = "0755";
       text = ''

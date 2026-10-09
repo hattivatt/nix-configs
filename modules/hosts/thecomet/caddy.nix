@@ -4,6 +4,11 @@
   {
     sops = {
       secrets.cf_token = { };
+      secrets.koinsight_basic_auth = {
+        owner = "caddy";
+        group = "caddy";
+        mode = "0400";
+      };
     };
     services.caddy = {
       environmentFile = config.sops.secrets.cf_token.path;
@@ -24,10 +29,28 @@
         }
 
         @syncthing host syncthing.hattivatt.fyi
-        handle @syncthing{
+        handle @syncthing {
           reverse_proxy 127.0.0.1:8384 {
               header_up Host localhost:8384
           }
+        }
+
+        @koinsight host koinsight.hattivatt.fyi
+        handle @koinsight {
+          basic_auth {
+            import ${config.sops.secrets.koinsight_basic_auth.path}
+          }
+          reverse_proxy 127.0.0.1:3228
+        }
+
+        @kosync host kosync.hattivatt.fyi
+        handle @kosync {
+          reverse_proxy 127.0.0.1:7200
+        }
+
+        @calibre host calibre.hattivatt.fyi
+        handle @calibre {
+          reverse_proxy localhost:8083
         }
 
         handle {

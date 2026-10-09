@@ -10,7 +10,6 @@
       "sponsorBlocker@ajay.app" = "sponsorblock";
       "uBlock0@raymondhill.net" = "ublock-origin";
       "vimium-c@gdh1995.cn" = "vimium-c";
-      "@windscribeff" = "windscribe";
       "{bd6be57d-91d7-41d2-b61d-3ba20f7942e5}" = "kagi-translate";
     };
   };

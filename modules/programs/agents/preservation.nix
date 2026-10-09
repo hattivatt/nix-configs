@@ -18,11 +18,6 @@
         directory = "/var/lib/hermes";
         group = "hermes";
         user = "hermes";
-        configureParent = true;
-        parent = {
-          group = "hermes";
-          user = "hermes";
-        };
       }
     ];
   };
