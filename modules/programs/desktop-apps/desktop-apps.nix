@@ -12,6 +12,7 @@
       upower
       exfat
       btrfs-progs
+      usbutils
     ];
     fonts.packages = with pkgs; [
       nerd-fonts.fira-code
@@ -92,6 +93,7 @@
       glow
       imagemagick
       libsixel
+      ripgrep
       local.autoskip
       local.calnotif
       local.mailnotif
@@ -110,6 +112,7 @@
       local.workbackup
       local.zkn
       local.callrec
+      local.booktest
     ];
     home.file.".gtk-bookmarks".text = ''
       file:///home/hattivatt/Downloads/Temporary Temporary

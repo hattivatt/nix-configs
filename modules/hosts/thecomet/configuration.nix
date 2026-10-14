@@ -8,8 +8,7 @@
       systemd-boot
       preservation
       hermes
-      calibre
-      kosync
+      cwa
       koinsight
     ];
     boot = {

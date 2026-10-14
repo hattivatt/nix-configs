@@ -43,13 +43,13 @@
           reverse_proxy 127.0.0.1:3228
         }
 
-        @kosync host kosync.hattivatt.fyi
-        handle @kosync {
-          reverse_proxy 127.0.0.1:7200
-        }
-
         @calibre host calibre.hattivatt.fyi
         handle @calibre {
+          reverse_proxy localhost:8083
+        }
+
+        @cwa host cwa.hattivatt.fyi
+        handle @cwa {
           reverse_proxy localhost:8083
         }
 
