@@ -3,6 +3,7 @@
     { pkgs, ... }:
     {
       catppuccin.yazi.accent = "maroon";
+      home.packages = with pkgs; [ sshfs ];
       programs.yazi = {
         enable = true;
         enableNushellIntegration = false;
@@ -15,6 +16,7 @@
           ouch = pkgs.yaziPlugins.ouch;
           bookmarks = pkgs.yaziPlugins.bookmarks;
           kdeconnect-send = pkgs.yaziPlugins.kdeconnect-send;
+          sshfs = pkgs.yaziPlugins.sshfs;
           yafg = {
             package = pkgs.yaziPlugins.yafg;
             settings.editor = "nvim";

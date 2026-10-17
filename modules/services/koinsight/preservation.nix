@@ -1,7 +1,11 @@
 {
   flake.modules.nixos.koinsight = {
     my.persist.directories = [
-      "/var/lib/koinsight"
+      {
+        directory = "/var/lib/koinsight";
+        group = "koinsight";
+        user = "koinsight";
+      }
     ];
   };
 }

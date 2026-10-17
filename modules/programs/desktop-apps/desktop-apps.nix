@@ -13,6 +13,7 @@
       exfat
       btrfs-progs
       usbutils
+      ffmpeg
     ];
     fonts.packages = with pkgs; [
       nerd-fonts.fira-code
@@ -94,6 +95,7 @@
       imagemagick
       libsixel
       ripgrep
+      net-tools
       local.autoskip
       local.calnotif
       local.mailnotif
