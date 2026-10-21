@@ -35,8 +35,8 @@
             ALT+j add sub-scale -0.1
             UP add volume +5
             DOWN add volume -5
-            LEFT seek -2
-            RIGHT seek 2
+            LEFT seek -2 exact
+            RIGHT seek 2 exact
             B script_binding myshows_mark
             g ignore
           '';

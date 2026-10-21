@@ -26,6 +26,7 @@
         notification-warning-fg = "ba(249,226,175,1)";
         recolor = "true";
         recolor-keephue = "true";
+        recolor-reverse-video = "true";
         recolor-lightcolor = "ba(30,30,46,1)";
         recolor-darkcolor = "ba(205,214,244,1)";
         index-fg = "ba(205,214,244,1)";

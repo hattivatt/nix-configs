@@ -14,8 +14,8 @@
       };
       hooks = {
         preNew = ''
-          notmuch-mailmover
-          mbsync -a
+          notmuch-mailmover || true
+          mbsync -a || echo "mbsync failed, indexing anyway" >&2
         '';
         postNew = "afew --tag --new -C ~/.config/notmuch/default/config && { mailnotif; notmuch tag -new -- tag:new; }";
       };

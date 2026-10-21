@@ -33,7 +33,7 @@
   lib,
 }:
 let
-  version = "0.58.0";
+  version = "0.67.5";
   platform = "x86_64-linux";
   release = "v${version}";
   releaseName = "${release}-${platform}";
@@ -46,7 +46,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/lambda-symbolics/autolith/releases/download/${release}/autolith-${release}-${platform}.tar.gz";
-      hash = "sha256-747YKp211Z3i+hv8/E4TKq1+VazMKXn9riMSx/g7IDc=";
+      hash = "sha256-b+FIvh+UahRExjhaVNtp7WbSEoaAjDRQxayqzY0A0ro=";
     };
 
     sourceRoot = "autolith-${release}-${platform}";

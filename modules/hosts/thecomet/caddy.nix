@@ -53,6 +53,11 @@
           reverse_proxy localhost:8083
         }
 
+        @kinoboxd host kinoboxd.hattivatt.fyi
+        handle @kinoboxd {
+          reverse_proxy localhost:3229
+        }
+
         handle {
             abort
         }

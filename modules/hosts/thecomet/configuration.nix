@@ -10,6 +10,7 @@
       hermes
       cwa
       koinsight
+      kinoboxd
     ];
     boot = {
       kernel.sysctl = {
