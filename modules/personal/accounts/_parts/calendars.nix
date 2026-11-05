@@ -6,7 +6,7 @@
         type = "caldav";
         url = "https://cloud.disroot.org";
         userName = "hattivatt";
-        passwordCommand = [ "pass" "show" "Mails/disroot_cal" ];
+        passwordCommand = [ "gopass" "cat" "Mails/disroot_cal" ];
       };
       pimsync = {
         enable = true;

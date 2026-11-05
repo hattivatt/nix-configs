@@ -6,7 +6,6 @@
     });
   in {
     ExtensionSettings = mkExtensionSettings {
-      "browserpass@maximbaz.com" = "browserpass-ce";
       "sponsorBlocker@ajay.app" = "sponsorblock";
       "uBlock0@raymondhill.net" = "ublock-origin";
       "vimium-c@gdh1995.cn" = "vimium-c";

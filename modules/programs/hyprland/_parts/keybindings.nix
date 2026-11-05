@@ -40,7 +40,6 @@ in
 {
   wayland.windowManager.hyprland = {
     settings.bind = [
-      (bind "SUPER" (submap "main"))
       (bind "SUPER_L" (submap "main"))
       (bind "SUPER_R" (submap "main"))
       (bind "XF86AudioNext" (exec "uwsm app -- playerctl -p spotify next"))
@@ -209,7 +208,7 @@ in
           {
             key = "l";
             desc = "Lock";
-            cmd = "hyprctl switchxkblayout all 0 && gpg-connect-agent reloadagent /bye && uwsm app -- hyprlock";
+            cmd = "hyprctl switchxkblayout all 0 && gpg-connect-agent reloadagent /bye && gopass age agent lock && uwsm app -- hyprlock";
           }
           {
             key = "L";
@@ -233,7 +232,6 @@ in
           }
         ]))))
         (bind "Q" (submap "reset"))
-        (bind "SUPER" (submap "reset"))
         (bind "SUPER_L" (submap "reset"))
         (bind "SUPER_R" (submap "reset"))
       ];

@@ -21,6 +21,17 @@
       hyprpaper
       hyprsysteminfo
     ];
+    services.hyprpaper.enable = true;
+    xdg.configFile."hypr/hyprpaper.conf".text = ''
+      splash = false
+      wallpaper {
+          monitor =
+          path = ~/Pictures/wallpapers
+          fit_mode = cover
+          timeout = 600
+          order = random-shuffle
+      }
+    '';
     systemd.user.services = {
       change_wp = {
         Unit.Description = "Change wallpaper script";

@@ -16,8 +16,6 @@ in
         ${exec "uwsm app -- dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"}
         ${exec "uwsm app -- quickshell --config /home/hattivatt/.config/quickshell/main"}
         ${exec "uwsm app -- hyprland-autoname-workspaces"}
-        ${exec "uwsm app -- hyprpaper"}
-        ${exec "sleep 2 && uwsm app -- change_wp"}
         ${exec "uwsm app -- nm-applet --indicator"}
         ${exec "uwsm app -- Telegram"}
         ${exec "uwsm app -- mattermost-desktop"}
@@ -25,6 +23,7 @@ in
         ${exec "uwsm app -- vesktop"}
         ${exec "uwsm app -- zen-beta"}
         ${exec "uwsm app -- obsidian"}
+        ${exec "uwsm app -- gopass age agent start"}
         ${exec "uwsm app -- foot -a aerc -e aerc"}
         ${exec "sleep 3 && uwsm app -- foot -a khal  -e khal interactive"}
         ${exec "uwsm app -- pimsync daemon"}

@@ -17,7 +17,7 @@
   flake.modules.homeManager.system-server = {
     imports = with inputs.self.modules.homeManager; [
       system-cli
-      agents
+      agents-server
       pass
       theme
       syncthing

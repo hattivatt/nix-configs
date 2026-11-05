@@ -8,10 +8,10 @@
     home.packages = with pkgs; [
       tessen
     ];
-    xdg.configFile."tessen/config".source = kv.generate "config" {
-      pass_backend = ''"pass"'';
-      dmenu_backend = ''"fuzzel"'';
-    };
+    # xdg.configFile."tessen/config".source = kv.generate "config" {
+    #   pass_backend = ''"pass"'';
+    #   dmenu_backend = ''"fuzzel"'';
+    # };
     programs.password-store = {
       enable = true;
       settings = {

@@ -19,7 +19,7 @@
   flake.modules.homeManager.system-desktop = {
     imports = with inputs.self.modules.homeManager; [
       system-cli
-      agents
+      agents-desktop
       chats
       desktop-apps
       desktop-envs
@@ -33,7 +33,8 @@
       k9s
       mpv
       obsidian
-      pass
+      # pass
+      gopass
       quickshell
       theme
       tundra

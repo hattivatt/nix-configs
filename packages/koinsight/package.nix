@@ -23,22 +23,22 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "koinsight";
-  version = "0.2.6";
+  version = "0.2.7";
 
   # Pinned upstream (user's fork) release tag. To upgrade: bump `rev`/`version`
   # and re-iterate `hash` + `npmDeps.hash` (see README).
   src = fetchFromGitHub {
     owner = "hattivatt";
     repo = "KoInsight";
-    rev = "v0.2.6";
-    hash = "sha256-rpMVoJkxdqZtLBbQzG/WkfvW0IBgVIIQZ5NltL+9K+0=";
+    rev = "v0.2.7";
+    hash = "sha256-chJcDOIvylnElFttBHGBvz0heBIG2vAD1F8QFYWEzXg=";
     # The repo has no .gitmodules; plugins/ are plain directories.
     fetchSubmodules = false;
   };
 
   npmDeps = fetchNpmDeps {
     inherit (finalAttrs) src;
-    hash = "sha256-t+7BaWvWTaHZUC5UifY78JYQBUWn+oNn6ZSO6xuL314=";
+    hash = "sha256-9idiSL2qx1w52xvMuikunTHkceFF3daAuMgfzmWHLtE=";
   };
 
   # Node 22 is required by the project (`engines.node >= 22`).

@@ -10,11 +10,9 @@
     boot.loader.efi.canTouchEfiVariables = true;
     boot.initrd.luks.devices."crypted" = {
       device = "/dev/disk/by-partlabel/disk-main-luks";
-      preLVM = true;
       allowDiscards = true;
       bypassWorkqueues = true;
     };
-    boot.initrd.systemd.enable = true;
     boot.initrd.systemd.services.rollback = {
       description = "Rollback BTRFS root; keep last 3 old roots";
       wantedBy = [ "initrd.target" ];

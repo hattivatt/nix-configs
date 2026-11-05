@@ -8,7 +8,6 @@
     boot.loader.efi.canTouchEfiVariables = true;
     boot.initrd.luks.devices."crypted" = {
       device = "/dev/disk/by-partlabel/disk-main-luks";
-      preLVM = true;
       allowDiscards = true;
       bypassWorkqueues = true;
     };

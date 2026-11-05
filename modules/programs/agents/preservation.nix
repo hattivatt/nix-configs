@@ -10,6 +10,8 @@
       ".local/share/opentui"
       ".local/state/autolith"
       ".local/state/opencode"
+      ".config/t3code-v2"
+      ".t3"
     ];
   };
   flake.modules.nixos.hermes = {

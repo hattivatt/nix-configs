@@ -11,7 +11,10 @@
     ];
     programs.zen-browser = {
       enable = true;
-      nativeMessagingHosts = [pkgs.browserpass];
+      nativeMessagingHosts = [
+        pkgs.browserpass
+        pkgs.gopass-jsonapi
+      ];
       profiles."default" = {
         mods = [
           "a5f6a231-e3c8-4ce8-8a8e-3e93efd6adec"

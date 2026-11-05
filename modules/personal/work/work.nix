@@ -5,7 +5,6 @@
     sops = {
       secrets."vcs/work_include" = { };
       secrets."vcs/work_content" = { };
-      secrets."vcs/pass_helper" = { };
       secrets.lazyjira_auth = { };
       secrets.tp_user = { };
       secrets.tp_proxy = { };
@@ -57,7 +56,6 @@
       ];
     };
     xdg.configFile = {
-      "pass-git-helper/git-pass-mapping.ini".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets."vcs/pass_helper".path;
       "lazyjira/auth.json".source = config.lib.file.mkOutOfStoreSymlink config.sops.secrets.lazyjira_auth.path;
     };
     imports = [

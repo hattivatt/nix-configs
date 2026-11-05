@@ -556,12 +556,15 @@ CWA_INGEST
     done
   '';
 
+  # With __structuredAttrs the list is passed to the wrapper hook verbatim, so
+  # every flag and its operands need their own element: a single
+  # "--prefix PATH : ..." string reaches makeWrapper as one unrecognised word.
   makeWrapperArgs = lib.optionals stdenv.hostPlatform.isLinux [
     # Wand/python-magic shell out to binaries; calibre/kepubify/unrar come from the module.
-    "--prefix PATH : ${lib.makeBinPath [ imagemagick ghostscript sqlite curl file ]}"
+    "--prefix" "PATH" ":" (lib.makeBinPath [ imagemagick ghostscript sqlite curl file ])
     # constants.py prefers these over the version files.
-    "--set CWA_INSTALLED_VERSION v${version}"
-    "--set CWA_STABLE_VERSION v${version}"
+    "--set" "CWA_INSTALLED_VERSION" "v${version}"
+    "--set" "CWA_STABLE_VERSION" "v${version}"
   ];
 
   # Importing cps creates $HOME/.calibre-web-automated, so HOME must be writable.

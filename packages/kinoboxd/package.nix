@@ -28,8 +28,8 @@
   source ? fetchFromGitHub {
     owner = "hattivatt";
     repo = "kinoboxd";
-    rev = "72e8f189d65cebcd705a4aa003c61b8b5242e4d2";
-    hash = "sha256-GJ5BWBrgVFqM+jt0scuaqAOSMMI199YSh+zDwKNQB08=";
+    rev = "2416813408ff9e25df829cb8a2765849fa29dd99";
+    hash = "sha256-UWtj0qTf3AcJKNzMck6R1WwTxvBtS9Tntw0L7MWqLJI=";
   },
 }:
 
@@ -41,7 +41,7 @@ buildNpmPackage (finalAttrs: {
 
   npmDeps = fetchNpmDeps {
     inherit (finalAttrs) src;
-    hash = "sha256-ARouZ8hT/EbihEMKiwzwo/PpFF9iOuGEMsveFlzphbQ=";
+    hash = "sha256-X6rMqzNU1oXT0h1oc7Ak3dxP6Yb90frXXbiIra52Qag=";
   };
 
   # Node 24 is what the project's own flake builds with.

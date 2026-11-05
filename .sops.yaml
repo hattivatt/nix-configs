@@ -12,3 +12,7 @@ creation_rules:
       - age:
           - *server_age
           - *user_age
+  - path_regex: secrets/keyring.sops
+    key_groups:
+      - age:
+          - *user_age

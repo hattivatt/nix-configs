@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.vcs =
-  { pkgs, ... }:
+  { pkgs, config, ... }:
   {
     programs.git = {
       enable = true;
@@ -18,7 +18,7 @@
         credential = {
           helper = [
             "cache"
-            "!pass-git-helper $@"
+            "gopass"
           ];
         };
       };
@@ -32,8 +32,13 @@
         };
       };
     };
-    home.packages = with pkgs; [
-      pass-git-helper
-    ];
+    programs.difftastic = {
+      enable = true;
+      jujutsu.enable = true;
+      options.display = "side-by-side-show-both";
+    };
+    programs.gh = {
+      enable = true;
+    };
   };
 }
