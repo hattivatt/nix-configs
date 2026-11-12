@@ -11,6 +11,7 @@
       ".local/state/autolith"
       ".local/state/opencode"
       ".config/t3code-v2"
+      ".config/claude"
       ".t3"
     ];
   };

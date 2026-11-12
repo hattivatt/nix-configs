@@ -23,7 +23,6 @@ in
         ${exec "uwsm app -- vesktop"}
         ${exec "uwsm app -- zen-beta"}
         ${exec "uwsm app -- obsidian"}
-        ${exec "uwsm app -- gopass age agent start"}
         ${exec "uwsm app -- foot -a aerc -e aerc"}
         ${exec "sleep 3 && uwsm app -- foot -a khal  -e khal interactive"}
         ${exec "uwsm app -- pimsync daemon"}

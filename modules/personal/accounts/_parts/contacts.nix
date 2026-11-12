@@ -6,7 +6,7 @@
         type = "carddav";
         url = "https://cloud.disroot.org/remote.php/dav/";
         userName = "hattivatt";
-        passwordCommand = [ "gppass" "cat" "Mails/disroot_contacts" ];
+        passwordCommand = ["gopass" "cat" "Mails/disroot_contacts" ];
       };
       pimsync = {
         enable = true;

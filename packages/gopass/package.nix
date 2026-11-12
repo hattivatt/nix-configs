@@ -1,7 +1,10 @@
 { pkgs, ... }:
 let
   gopass = pkgs.gopass.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [ ./gopass-libsecret-dh.patch ];
+    patches = (old.patches or [ ]) ++ [
+      ./gopass-libsecret-dh.patch
+      ./gopass-age-unlock-guard.patch
+    ];
   });
 in
 pkgs.symlinkJoin {

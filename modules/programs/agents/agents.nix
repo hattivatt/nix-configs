@@ -48,11 +48,16 @@
     home.shellAliases = {
       pia = ''pi -p --model "opencode-go/deepseek-v4-flash"'';
     };
+    home.sessionVariables.CLAUDE_CONFIG_DIR = "${config.xdg.configHome}/claude";
+    programs.nushell.extraConfig = ''
+      $env.CLAUDE_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "claude")
+    '';
     home.file.".config/opencode/AGENTS.md".source = ./common/AGENTS.md;
     home.file.".config/pi/agent/AGENTS.md".source = ./common/AGENTS.md;
     home.packages = with pkgs; [
       t3code
       local.autolith
+      llm-agents.claude-code
     ];
     programs.nushell.extraEnv = ''
       $env.OPENCODE_API_KEY = (open ${config.sops.secrets."agents/opencode".path} | str trim)

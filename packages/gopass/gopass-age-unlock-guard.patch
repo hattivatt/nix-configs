@@ -1,0 +1,213 @@
+diff -urN a/internal/backend/crypto/age/age.go b/internal/backend/crypto/age/age.go
+--- a/internal/backend/crypto/age/age.go	2026-11-15 12:18:43.307893527 +0700
++++ b/internal/backend/crypto/age/age.go	2026-11-15 12:18:49.777827569 +0700
+@@ -6,6 +6,7 @@
+ 	"os"
+ 	"path/filepath"
+ 	"strings"
++	"sync"
+ 	"time"
+ 
+ 	"filippo.io/age"
+@@ -50,6 +51,8 @@
+ 	sshKeyPath      string // custom SSH key or directory path; if set then they are loaded no matter value in loadSSHKeys
+ 	pwCallback      func(string, bool) ([]byte, error)
+ 	pwPurgeCallback func(string)
++	unlockMu        sync.Mutex
++	unlockFailedAt  time.Time
+ }
+ 
+ // New creates a new Age backend.
+diff -urN a/internal/backend/crypto/age/decrypt.go b/internal/backend/crypto/age/decrypt.go
+--- a/internal/backend/crypto/age/decrypt.go	2026-11-15 12:15:50.983515264 +0700
++++ b/internal/backend/crypto/age/decrypt.go	2026-11-15 12:44:18.085428126 +0700
+@@ -3,10 +3,12 @@
+ import (
+ 	"bytes"
+ 	"context"
++	"errors"
+ 	"fmt"
+ 	"io"
+ 	"os"
+ 	"strings"
++	"time"
+ 
+ 	"filippo.io/age"
+ 	"github.com/gopasspw/gopass/internal/backend/crypto/age/agent"
+@@ -16,8 +18,40 @@
+ 	"github.com/gopasspw/gopass/pkg/debug"
+ )
+ 
++type identityUnlockError struct {
++	err error
++}
++
++func (e *identityUnlockError) Error() string { return e.err.Error() }
++func (e *identityUnlockError) Unwrap() error { return e.err }
++
+ // Decrypt will attempt to decrypt the given payload.
+ func (a *Age) Decrypt(ctx context.Context, ciphertext []byte) ([]byte, error) {
++	waitingSince := time.Now()
++	a.unlockMu.Lock()
++	defer a.unlockMu.Unlock()
++
++	lock, err := acquireUnlockLock()
++	if err != nil {
++		debug.Log("failed to acquire age unlock lock, prompts are not serialized across processes: %s", err)
++	}
++	defer lock.release()
++
++	if a.unlockFailedAt.After(waitingSince) || lock.failedAfter(waitingSince) {
++		return nil, fmt.Errorf("age keyring unlock failed while this request was waiting for it")
++	}
++
++	plaintext, err := a.decryptUnguarded(ctx, ciphertext)
++	var unlockErr *identityUnlockError
++	if errors.As(err, &unlockErr) {
++		a.unlockFailedAt = time.Now()
++		lock.markFailed()
++	}
++
++	return plaintext, err
++}
++
++func (a *Age) decryptUnguarded(ctx context.Context, ciphertext []byte) ([]byte, error) {
+ 	if config.Bool(ctx, "age.agent-enabled") {
+ 		session, err := a.usesKeyringSession(ctx)
+ 		if err != nil {
+@@ -32,13 +66,17 @@
+ 		if err == nil {
+ 			return plaintext, nil
+ 		}
++		var unlockErr *identityUnlockError
++		if errors.As(err, &unlockErr) {
++			return nil, err
++		}
+ 		debug.Log("failed to decrypt with agent: %s", err)
+ 		debug.Log("falling back to direct decryption")
+ 	}
+ 
+ 	ids, err := a.getAllIds(ctx)
+ 	if err != nil {
+-		return nil, err
++		return nil, &identityUnlockError{err: err}
+ 	}
+ 
+ 	plaintext, err := a.decrypt(ciphertext, ids...)
+@@ -104,7 +142,7 @@
+ 	// get identities
+ 	ids, err := a.getAllIds(ctx)
+ 	if err != nil {
+-		return nil, err
++		return nil, &identityUnlockError{err: err}
+ 	}
+ 	// send identities to agent
+ 	sIds, err := a.identitiesToString(ids)
+diff -urN a/internal/backend/crypto/age/unlocklock_unix.go b/internal/backend/crypto/age/unlocklock_unix.go
+--- a/internal/backend/crypto/age/unlocklock_unix.go	1970-01-01 08:00:00.000000000 +0800
++++ b/internal/backend/crypto/age/unlocklock_unix.go	2026-11-15 12:44:11.015484944 +0700
+@@ -0,0 +1,83 @@
++//go:build !windows
++
++package age
++
++import (
++	"errors"
++	"fmt"
++	"os"
++	"path/filepath"
++	"strconv"
++	"strings"
++	"syscall"
++	"time"
++
++	"github.com/gopasspw/gopass/pkg/appdir"
++)
++
++const unlockLockName = "age-unlock.lock"
++
++type unlockLock struct {
++	file *os.File
++}
++
++func acquireUnlockLock() (*unlockLock, error) {
++	dir := appdir.UserRuntime()
++	if err := os.MkdirAll(dir, 0o700); err != nil {
++		return nil, fmt.Errorf("failed to create runtime directory: %w", err)
++	}
++
++	file, err := os.OpenFile(filepath.Join(dir, unlockLockName), os.O_RDWR|os.O_CREATE, 0o600)
++	if err != nil {
++		return nil, fmt.Errorf("failed to open unlock lock: %w", err)
++	}
++
++	for {
++		err = syscall.Flock(int(file.Fd()), syscall.LOCK_EX)
++		if !errors.Is(err, syscall.EINTR) {
++			break
++		}
++	}
++	if err != nil {
++		_ = file.Close()
++
++		return nil, fmt.Errorf("failed to acquire unlock lock: %w", err)
++	}
++
++	return &unlockLock{file: file}, nil
++}
++
++func (l *unlockLock) failedAfter(t time.Time) bool {
++	if l == nil {
++		return false
++	}
++
++	buf := make([]byte, 32)
++	n, _ := l.file.ReadAt(buf, 0)
++	nanos, err := strconv.ParseInt(strings.TrimSpace(string(buf[:n])), 10, 64)
++	if err != nil {
++		return false
++	}
++
++	return time.Unix(0, nanos).After(t)
++}
++
++func (l *unlockLock) markFailed() {
++	if l == nil {
++		return
++	}
++
++	if err := l.file.Truncate(0); err != nil {
++		return
++	}
++	_, _ = l.file.WriteAt([]byte(strconv.FormatInt(time.Now().UnixNano(), 10)), 0)
++}
++
++func (l *unlockLock) release() {
++	if l == nil {
++		return
++	}
++
++	_ = syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
++	_ = l.file.Close()
++}
+diff -urN a/internal/backend/crypto/age/unlocklock_windows.go b/internal/backend/crypto/age/unlocklock_windows.go
+--- a/internal/backend/crypto/age/unlocklock_windows.go	1970-01-01 08:00:00.000000000 +0800
++++ b/internal/backend/crypto/age/unlocklock_windows.go	2026-11-15 12:44:13.419465643 +0700
+@@ -0,0 +1,17 @@
++//go:build windows
++
++package age
++
++import "time"
++
++type unlockLock struct{}
++
++func acquireUnlockLock() (*unlockLock, error) {
++	return &unlockLock{}, nil
++}
++
++func (l *unlockLock) failedAfter(time.Time) bool { return false }
++
++func (l *unlockLock) markFailed() {}
++
++func (l *unlockLock) release() {}

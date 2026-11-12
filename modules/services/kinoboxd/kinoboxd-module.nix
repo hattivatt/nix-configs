@@ -1,15 +1,3 @@
-# kinoboxd — native NixOS service module (dendritic flake-parts style).
-#
-# The module is inputs-free and only takes `{ config, lib, pkgs, ... }`, so it
-# can be imported either through the flake-parts `import-tree` (as
-# `flake.modules.nixos.kinoboxd`) or directly as a plain NixOS module:
-#
-#   imports = [ (import ./kinoboxd-module.nix).flake.modules.nixos.kinoboxd ];
-#
-# Defaults mirror the sibling KoInsight module: loopback-friendly port, no
-# firewall opening by default (Caddy/nginx is the public entry point), a
-# dedicated system user and state under /var/lib. The app itself listens on
-# all interfaces; restrict access with the firewall or a reverse proxy.
 {
   flake.modules.nixos.kinoboxd =
     {
@@ -21,8 +9,6 @@
     let
       cfg = config.services.kinoboxd;
 
-      # Absolute path -> use as-is (tmpfiles rule); bare name -> /var/lib/<name>
-      # (systemd StateDirectory). Mirrors the KoInsight/CWA modules.
       stateDir =
         if lib.hasPrefix "/" (toString cfg.stateDir) then
           toString cfg.stateDir
@@ -33,13 +19,7 @@
         NODE_ENV = "production";
         PORT = toString cfg.port;
         KINOBOXD_STATE_DIR = stateDir;
-        # The launcher copies server/ into $stateDir/app and keeps the TMDB
-        # cache in $stateDir/app/cache; HOME just makes any stray Node write
-        # land inside the same writable tree.
         HOME = stateDir;
-        # The server reads the same slice size the books-backfill unit uses,
-        # so `summary.yearBackfill.runsLeft` («осталось ~K прогонов») is an
-        # honest estimate instead of a guess.
         BOOKS_BACKFILL_LIMIT = toString cfg.booksBackfillLimit;
       }
       // cfg.extraEnvironment;
@@ -73,8 +53,6 @@
           "AF_UNIX"
           "AF_NETLINK"
         ];
-        # NOTE: MemoryDenyWriteExecute is deliberately omitted — V8's JIT needs
-        # writable-then-executable memory, which that setting forbids.
         SystemCallFilter = [
           "@system-service"
           "~@privileged"
@@ -87,47 +65,37 @@
         StateDirectoryMode = "0750";
       };
 
-      # Backfill targets, mirroring the names accepted by
-      # `kinoboxd-backfill` / server/backfill.js. This list is the single
-      # source for the `backfillTargets` enum and for the generated per-target
-      # oneshot units (`kinoboxd-backfill-<target>`).
       allTargets = [
         "imdb"
         "keywords"
         "wikidata"
         "rematch"
         "collections"
+        "mcu"
       ];
 
       aggregateBackfillUnit = "kinoboxd-backfill";
       backfillUnit = target: "kinoboxd-backfill-${target}";
 
-      # Book metadata backfill (first-publication years). A separate unit with
-      # its own cache (cache-book) and its own budget; it is not a target of the
-      # film launcher, so it lives outside `allTargets`.
       booksBackfillUnit = "kinoboxd-backfill-books";
 
-      # Scheduled metadata resolve for the unlinked tail of LiveLib profiles.
-      # A separate oneshot/timer with the same `cache-book/resolve.lock` as an
-      # import resolve pass; it is mutually exclusive with every backfill unit
-      # (all of them spend the Литрес budget and write the same cache files).
       booksResolveUnit = "kinoboxd-resolve-books";
 
-      # All backfill units (aggregate + one per target + the books ones). Used
-      # to build the mutual-exclusion `Conflicts=` lists.
-      allBackfillUnits =
-        [ aggregateBackfillUnit booksBackfillUnit booksResolveUnit ] ++ map backfillUnit allTargets;
+      booksMangaUnit = "kinoboxd-backfill-manga";
+      booksAuthorsUnit = "kinoboxd-backfill-authors";
 
-      # Every backfill unit conflicts with all the other backfill units, so
-      # starting one stops a parallel one instead of letting two scans race on
-      # the same cache files. systemd does not restart the stopped unit, and
-      # the main kinoboxd.service is deliberately not in this set: the cache
-      # writes are atomic, so serving while a backfill runs is safe.
+      allBackfillUnits = [
+        aggregateBackfillUnit
+        booksBackfillUnit
+        booksResolveUnit
+        booksMangaUnit
+        booksAuthorsUnit
+      ]
+      ++ map backfillUnit allTargets;
+
       conflictsFor =
         unit: map (other: "${other}.service") (lib.filter (other: other != unit) allBackfillUnits);
 
-      # Identity, environment file and writable state path shared by the
-      # server and every oneshot. Callers add Type/ExecStart/restart policy.
       serviceCommon = {
         User = cfg.user;
         Group = cfg.group;
@@ -161,8 +129,6 @@
         };
 
         stateDir = lib.mkOption {
-          # `types.str` (as in the KoInsight/CWA modules) keeps absolute paths
-          # working and also allows the `/var/lib/<name>` shorthand below.
           type = lib.types.str;
           default = "/var/lib/kinoboxd";
           description = ''
@@ -219,7 +185,9 @@
             - `wikidata` — add WDQS tags (genres, colours, movements, based-on);
             - `rematch` — re-run the TMDB matcher over {file}`cache/index.json`
               (automatic ids and misses only; manual `{ id, kind }` matches are
-              never modified).
+              never modified);
+            - `mcu` — mark Marvel Cinematic Universe membership (collection
+              name cleanup + a per-film flag).
 
             Every target is idempotent and skips entries that are already
             complete, so re-running the unit is only a cache scan.
@@ -372,7 +340,8 @@
           '';
         };
 
-        booksResolveLimit = lib.mkOption {          type = lib.types.ints.unsigned;
+        booksResolveLimit = lib.mkOption {
+          type = lib.types.ints.unsigned;
           default = 200;
           example = 50;
           description = ''
@@ -433,6 +402,78 @@
           };
         };
 
+        booksMangaBackfillLimit = lib.mkOption {
+          type = lib.types.ints.unsigned;
+          default = 20;
+          example = 50;
+          description = ''
+            How many weak-detail works one
+            {command}`kinoboxd-backfill-manga` run may walk (`0` = no cap).
+            The default matches the script's own default: one run makes one
+            title lookup per provider (Open Library, then Google Books) per
+            candidate, so a small weekly slice is enough to drain the tail of
+            Hardcover-only works. Already settled works are skipped, so an
+            exhausted run is a cheap cache scan.
+          '';
+        };
+
+        booksMangaBackfillPauseMs = lib.mkOption {
+          type = lib.types.ints.positive;
+          default = 600;
+          description = ''
+            Pause in milliseconds between provider lookups of the manga
+            backfill. The script's own politeness default; it never touches
+            livelib.ru, only Open Library and Google Books.
+          '';
+        };
+
+        booksMangaBackfillTimer = {
+          enable = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = ''
+              Run {command}`kinoboxd-backfill-manga.service` on a schedule.
+              On by default: the manga flag is persisted per work, so a run
+              over a drained pool exits in seconds with zero requests.
+              `--recheck` (manual runs) is what re-asks settled works.
+            '';
+          };
+
+          interval = lib.mkOption {
+            type = lib.types.str;
+            default = "weekly";
+            example = "*-*-01 04:00:00";
+            description = ''
+              `OnCalendar=` expression for
+              {option}`services.kinoboxd.booksMangaBackfillTimer`.
+            '';
+          };
+        };
+
+        booksAuthorsBackfillTimer = {
+          enable = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = ''
+              Run {command}`kinoboxd-backfill-authors.service` on a schedule.
+              Off by default: the author-alias migration is diagnostic — the
+              WDQS bridge is default-on inside {command}`kinoboxd.service`'s
+              stats pass, so a scheduled `--wikidata` run would only duplicate
+              it. Turn on only to replay the bridge after a schema change.
+            '';
+          };
+
+          interval = lib.mkOption {
+            type = lib.types.str;
+            default = "weekly";
+            example = "*-*-01 05:00:00";
+            description = ''
+              `OnCalendar=` expression for
+              {option}`services.kinoboxd.booksAuthorsBackfillTimer`.
+            '';
+          };
+        };
+
         user = lib.mkOption {
           type = lib.types.str;
           default = "kinoboxd";
@@ -477,31 +518,6 @@
               };
           };
 
-          # Manual one-shot cache migration: fills fields that older cache
-          # normalizers dropped (notably `details.imdb_id`) and adds the
-          # Wikidata tags. It is idempotent and skips entries that are already
-          # complete, so re-running it is harmless (just a cache scan) — but
-          # nothing triggers it automatically unless
-          # `services.kinoboxd.backfillTimer.enable` is set.
-          #
-          #   sudo systemctl start kinoboxd-backfill
-          #   journalctl -u kinoboxd-backfill -f
-          #
-          # `services.kinoboxd.backfillTargets` selects the targets and their
-          # order (default: imdb, then wikidata); the wrapper logs a
-          # `[backfill] target: <name>` line before each one.
-          #
-          # It is intentionally not wantedBy any target: start it explicitly.
-          # Running it while kinoboxd.service is up is safe — each details file
-          # is written via write-to-tmp + atomic rename, so the server sees
-          # either the old or the new entry, never a partial one. Stop the main
-          # service first only if you want to avoid any interleaving at all
-          # (e.g. while doing a large batch migration).
-          #
-          # Next to this aggregate unit every target gets its own oneshot
-          # (kinoboxd-backfill-<target>.service, generated below). All
-          # backfill units conflict with each other, so only one scan runs at
-          # a time; the stopped unit is not restarted automatically.
           kinoboxd-backfill = {
             description = "kinoboxd — TMDB/Wikidata cache backfill (oneshot)";
             documentation = [ "https://github.com/hattivatt/kinoboxd" ];
@@ -517,9 +533,6 @@
               // {
                 Type = "oneshot";
 
-                # Targets come from services.kinoboxd.backfillTargets, in
-                # order; the wrapper defaults to "imdb wikidata" when no
-                # argument is given.
                 ExecStart = lib.concatStringsSep " " (
                   [ "${cfg.package}/bin/kinoboxd-backfill" ] ++ cfg.backfillTargets
                 );
@@ -549,26 +562,6 @@
           ) allTargets
         )
         // {
-          # Book metadata backfill: the first-publication year of every work
-          # whose cached details document predates `firstPublishedYear`
-          # (round ef593a8), plus the negative cache that keeps a re-run from
-          # re-asking providers about books nobody knows a year for.
-          #
-          #   sudo systemctl start kinoboxd-backfill-books
-          #   journalctl -u kinoboxd-backfill-books -f
-          #
-          # Idempotent: a document that has the year is skipped, a document that
-          # was asked and answered nothing is skipped for 30 days, so a repeated
-          # start is a cache scan plus whatever is still missing. Budgeted and
-          # polite (Литрес: two requests and `booksBackfillPauseMs` per book,
-          # `booksBackfillLitresBudget` books per run; Open Library 250 ms;
-          # Hardcover through the shared gate). The script writes the cache
-          # through the same atomic save as the server, so `kinoboxd.service`
-          # keeps serving while it runs.
-          #
-          # The launcher is `kinoboxd-books-backfill` from package.nix; it shares
-          # `prepare-state.sh` with the other two launchers, so PATH, the state
-          # dir and the canonical caches are the same as the server's.
           kinoboxd-backfill-books = {
             description = "kinoboxd — book first-publication-year backfill (oneshot)";
             documentation = [ "https://github.com/hattivatt/kinoboxd" ];
@@ -581,9 +574,6 @@
               BOOKS_LITRES_BUDGET = toString cfg.booksBackfillLitresBudget;
             };
 
-            # The launcher resolves node itself; the package on PATH is for the
-            # wrapper's own shell tools (`basename`, `cp`) and for operators who
-            # run `kinoboxd-books-backfill` inside `systemctl shell`.
             path = [ cfg.package ];
 
             serviceConfig =
@@ -602,23 +592,6 @@
               };
           };
 
-          # Scheduled metadata resolve for the unlinked tail of LiveLib
-          # profiles (round 29.10.2026). A profile imported once kept 455 works
-          # without a link/details document forever, because `resolveProfile`
-          # only ran as an import stage. This oneshot walks one slice per run:
-          # Cyrillic → Литрес-first, ISBN → one batched Hardcover lookup, the
-          # rest GB → OL; the LiveLib card is disabled (`allowLivelibCard:
-          # false`), so the unit never touches livelib.ru (AGENTS.md §1).
-          #
-          #   sudo systemctl start kinoboxd-resolve-books
-          #   journalctl -u kinoboxd-resolve-books -f
-          #
-          # Idempotent: positive links are reused, a provider "nothing found"
-          # verdict is skipped for `booksResolveRecheckDays` (per-candidate
-          # state under cache-book/resolve-candidates/), a budget/breaker/error
-          # deferral stays a candidate. The shared `cache-book/resolve.lock`
-          # serialises it with an import resolve pass, and the unit conflicts
-          # with every backfill unit so two Литрес consumers never overlap.
           kinoboxd-resolve-books = {
             description = "kinoboxd — book metadata resolve for the unlinked tail (oneshot)";
             documentation = [ "https://github.com/hattivatt/kinoboxd" ];
@@ -651,10 +624,59 @@
                 ];
               };
           };
+
+          kinoboxd-backfill-manga = {
+            description = "kinoboxd — book manga/comics signal migration (oneshot)";
+            documentation = [ "https://github.com/hattivatt/kinoboxd" ];
+            after = [ "network-online.target" ];
+            wants = [ "network-online.target" ];
+            wantedBy = [ ];
+            conflicts = conflictsFor booksMangaUnit;
+
+            environment = serviceEnv;
+
+            path = [ cfg.package ];
+
+            serviceConfig =
+              hardening
+              // serviceCommon
+              // {
+                Type = "oneshot";
+
+                ExecStart = lib.concatStringsSep " " [
+                  "${cfg.package}/bin/kinoboxd-books-migrate"
+                  "manga"
+                  "--limit"
+                  (toString cfg.booksMangaBackfillLimit)
+                  "--pause"
+                  (toString cfg.booksMangaBackfillPauseMs)
+                ];
+              };
+          };
+
+          kinoboxd-backfill-authors = {
+            description = "kinoboxd — book author-alias bridge migration (oneshot)";
+            documentation = [ "https://github.com/hattivatt/kinoboxd" ];
+            after = [ "network-online.target" ];
+            wants = [ "network-online.target" ];
+            wantedBy = [ ];
+            conflicts = conflictsFor booksAuthorsUnit;
+
+            environment = serviceEnv;
+
+            path = [ cfg.package ];
+
+            serviceConfig =
+              hardening
+              // serviceCommon
+              // {
+                Type = "oneshot";
+
+                ExecStart = "${cfg.package}/bin/kinoboxd-books-migrate authors --wikidata";
+              };
+          };
         };
 
-        # Optional schedule for the aggregate unit. Off by default; enabling it
-        # just adds the timer, the units above stay manual the rest of the time.
         systemd.timers.kinoboxd-backfill = lib.mkIf cfg.backfillTimer.enable {
           description = "kinoboxd — scheduled TMDB/Wikidata cache backfill";
           wantedBy = [ "timers.target" ];
@@ -665,11 +687,6 @@
           };
         };
 
-        # Books backfill schedule. Enabled by default: the first-publication
-        # year is a queue that one manual run cannot drain (budget + limit),
-        # and a run with nothing to do exits in seconds with zero requests.
-        # `Persistent = true` replays a missed tick after a reboot without
-        # stacking several runs.
         systemd.timers.kinoboxd-backfill-books = lib.mkIf cfg.booksBackfillTimer.enable {
           description = "kinoboxd — scheduled first-publication-year backfill";
           wantedBy = [ "timers.target" ];
@@ -681,16 +698,34 @@
           };
         };
 
-        # Scheduled metadata resolve. Enabled by default: the unlinked tail is
-        # a queue (Литрес budget + slice size), and an empty/recheck-only pool
-        # exits in milliseconds with zero requests. `Persistent = true` replays
-        # a missed tick after a reboot without stacking several runs.
         systemd.timers.kinoboxd-resolve-books = lib.mkIf cfg.booksResolveTimer.enable {
           description = "kinoboxd — scheduled book metadata resolve";
           wantedBy = [ "timers.target" ];
           timerConfig = {
             Unit = "${booksResolveUnit}.service";
             OnCalendar = cfg.booksResolveTimer.interval;
+            Persistent = true;
+            RandomizedDelaySec = "5m";
+          };
+        };
+
+        systemd.timers.kinoboxd-backfill-manga = lib.mkIf cfg.booksMangaBackfillTimer.enable {
+          description = "kinoboxd — scheduled manga/comics signal migration";
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            Unit = "${booksMangaUnit}.service";
+            OnCalendar = cfg.booksMangaBackfillTimer.interval;
+            Persistent = true;
+            RandomizedDelaySec = "5m";
+          };
+        };
+
+        systemd.timers.kinoboxd-backfill-authors = lib.mkIf cfg.booksAuthorsBackfillTimer.enable {
+          description = "kinoboxd — scheduled author-alias bridge migration";
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            Unit = "${booksAuthorsUnit}.service";
+            OnCalendar = cfg.booksAuthorsBackfillTimer.interval;
             Persistent = true;
             RandomizedDelaySec = "5m";
           };

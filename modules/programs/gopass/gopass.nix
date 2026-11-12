@@ -42,19 +42,33 @@
         agent-timeout = 36000
         agent-enabled = true
     '';
+    systemd.user.services.gopass-age-agent = {
+      Unit = {
+        After = [ "graphical-session.target" "sops-nix.service" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.local.gopass}/bin/gopass age agent start";
+        ExecStartPost = "${pkgs.bash}/bin/bash -c 'until ${pkgs.local.gopass}/bin/gopass age agent status; do sleep 0.2; done'";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
     systemd.user.services.gopass-secret-service = {
       Unit = {
         Description = "gopass Secret Service";
+        After = [ "graphical-session.target" "sops-nix.service" "gopass-age-agent.service" ];
+        Wants = [ "gopass-age-agent.service" ];
+        PartOf = [ "graphical-session.target" ];
       };
-
       Service = {
         Type = "dbus";
         BusName = "org.freedesktop.secrets";
         ExecStart = "${pkgs.local.gopass}/bin/gopass secret-service serve";
         Restart = "on-failure";
+        RestartSec = 5;
       };
-
-      Install.WantedBy = [ "default.target" ];
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }
