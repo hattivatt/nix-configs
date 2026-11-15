@@ -22,7 +22,7 @@
         "net.ipv4.tcp_ecn" = "1";
       };
     };
-    time.timeZone = "Asia/Ho_Chi_Minh";
+    time.timeZone = "Asia/Kuala_Lumpur";
     networking.hostName = "thevalley";
     programs.appimage = {
       enable = true;

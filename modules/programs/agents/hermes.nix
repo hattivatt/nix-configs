@@ -27,16 +27,6 @@
       hermesHomeFiles."SOUL.md" = ./hermes/SOUL.md;
       documents."AGENTS.md" = ./hermes/AGENTS.md;
       mcpServers = {
-        foundryvtt = {
-          command = "/home/hermes/.bun/bin/bun";
-          args = ["/home/hermes/mcp/foundryvtt-mcp/node_modules/foundryvtt-mcp/dist/index.js"];
-          env = {
-            FOUNDRY_URL = "http://localhost:30000";
-            FOUNDRY_USERNAME = "clanker";
-            FOUNDRY_PASSWORD = "\${FOUNDRY_PASSWORD}";
-            FOUNDRY_WRITE_ENABLED = "true";
-          };
-        };
         actual-budget-mcp-usd = {
           command = "/usr/bin/npx";
           args = ["-y" "actual-budget-mcp"];

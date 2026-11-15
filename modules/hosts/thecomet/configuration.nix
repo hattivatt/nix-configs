@@ -11,6 +11,7 @@
       cwa
       koinsight
       kinoboxd
+      campaign-bot
     ];
     boot = {
       kernel.sysctl = {

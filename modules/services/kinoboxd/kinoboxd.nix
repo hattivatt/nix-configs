@@ -32,6 +32,7 @@
 
       services.kinoboxd = {
         enable = true;
+        profile = "/nix/var/nix/profiles/kinoboxd";
         port = 3229;
         stateDir = "/var/lib/kinoboxd";
         environmentFile = config.sops.templates."kinoboxd.env".path;

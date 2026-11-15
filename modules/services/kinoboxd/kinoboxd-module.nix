@@ -9,6 +9,8 @@
     let
       cfg = config.services.kinoboxd;
 
+      runtime = if cfg.profile == null then cfg.package else cfg.profile;
+
       stateDir =
         if lib.hasPrefix "/" (toString cfg.stateDir) then
           toString cfg.stateDir
@@ -110,6 +112,24 @@
         enable = lib.mkEnableOption "kinoboxd, a Letterboxd/KinoPoisk statistics backend with TMDB enrichment";
 
         package = lib.mkPackageOption pkgs [ "local" "kinoboxd" ] { };
+
+        profile = lib.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+          example = "/nix/var/nix/profiles/kinoboxd";
+          description = ''
+            Nix profile the units run kinoboxd from instead of
+            {option}`package`. Every unit then calls
+            `<profile>/bin/kinoboxd*`, so a release is deployed by switching
+            the profile and restarting {command}`kinoboxd.service`
+            (`scripts/deploy.sh vX.Y.Z`), without a NixOS rebuild or a new
+            system generation, and {option}`package` is never evaluated. The
+            profile keeps its own generations (`scripts/deploy.sh --rollback`)
+            and is a GC root. It must exist before the units start, so run
+            the first deploy before switching the system to this option.
+            `null` keeps the store path of {option}`package` in the units.
+          '';
+        };
 
         port = lib.mkOption {
           type = lib.types.port;
@@ -488,6 +508,13 @@
       };
 
       config = lib.mkIf cfg.enable {
+        assertions = [
+          {
+            assertion = cfg.profile == null || lib.hasPrefix "/" cfg.profile;
+            message = "services.kinoboxd.profile must be an absolute path";
+          }
+        ];
+
         systemd.tmpfiles.settings."10-kinoboxd" =
           lib.optionalAttrs (lib.hasPrefix "/" (toString cfg.stateDir))
             {
@@ -512,7 +539,7 @@
               // {
                 Type = "simple";
 
-                ExecStart = "${cfg.package}/bin/kinoboxd";
+                ExecStart = "${runtime}/bin/kinoboxd";
                 Restart = "on-failure";
                 RestartSec = "5s";
               };
@@ -534,7 +561,7 @@
                 Type = "oneshot";
 
                 ExecStart = lib.concatStringsSep " " (
-                  [ "${cfg.package}/bin/kinoboxd-backfill" ] ++ cfg.backfillTargets
+                  [ "${runtime}/bin/kinoboxd-backfill" ] ++ cfg.backfillTargets
                 );
               };
           };
@@ -556,7 +583,7 @@
                 // serviceCommon
                 // {
                   Type = "oneshot";
-                  ExecStart = "${cfg.package}/bin/kinoboxd-backfill ${target}";
+                  ExecStart = "${runtime}/bin/kinoboxd-backfill ${target}";
                 };
             }
           ) allTargets
@@ -574,7 +601,7 @@
               BOOKS_LITRES_BUDGET = toString cfg.booksBackfillLitresBudget;
             };
 
-            path = [ cfg.package ];
+            path = [ runtime ];
 
             serviceConfig =
               hardening
@@ -583,7 +610,7 @@
                 Type = "oneshot";
 
                 ExecStart = lib.concatStringsSep " " [
-                  "${cfg.package}/bin/kinoboxd-books-backfill"
+                  "${runtime}/bin/kinoboxd-books-backfill"
                   "--limit"
                   (toString cfg.booksBackfillLimit)
                   "--pause"
@@ -605,7 +632,7 @@
               BOOKS_GB_BUDGET = toString cfg.booksResolveGbBudget;
             };
 
-            path = [ cfg.package ];
+            path = [ runtime ];
 
             serviceConfig =
               hardening
@@ -614,7 +641,7 @@
                 Type = "oneshot";
 
                 ExecStart = lib.concatStringsSep " " [
-                  "${cfg.package}/bin/kinoboxd-books-resolve"
+                  "${runtime}/bin/kinoboxd-books-resolve"
                   "--limit"
                   (toString cfg.booksResolveLimit)
                   "--pause"
@@ -635,7 +662,7 @@
 
             environment = serviceEnv;
 
-            path = [ cfg.package ];
+            path = [ runtime ];
 
             serviceConfig =
               hardening
@@ -644,7 +671,7 @@
                 Type = "oneshot";
 
                 ExecStart = lib.concatStringsSep " " [
-                  "${cfg.package}/bin/kinoboxd-books-migrate"
+                  "${runtime}/bin/kinoboxd-books-migrate"
                   "manga"
                   "--limit"
                   (toString cfg.booksMangaBackfillLimit)
@@ -664,7 +691,7 @@
 
             environment = serviceEnv;
 
-            path = [ cfg.package ];
+            path = [ runtime ];
 
             serviceConfig =
               hardening
@@ -672,7 +699,7 @@
               // {
                 Type = "oneshot";
 
-                ExecStart = "${cfg.package}/bin/kinoboxd-books-migrate authors --wikidata";
+                ExecStart = "${runtime}/bin/kinoboxd-books-migrate authors --wikidata";
               };
           };
         };
