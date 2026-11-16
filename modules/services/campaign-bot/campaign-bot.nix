@@ -21,6 +21,7 @@
 
       services.campaign-bot = {
         enable = true;
+        profile = "/nix/var/nix/profiles/campaign-bot";
         stateDir = "/var/lib/campaign-bot";
         environmentFile = config.sops.templates."campaign-bot.env".path;
         foundryData.root = "/home/hattivatt/.local/share/FoundryVTT";

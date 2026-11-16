@@ -1,4 +1,4 @@
 [submodule "modules/personal/private"]
 	path = modules/personal/private
-	url = git@github.com:hattivatt/nix-configs-private.git
+  url = ssh://git@github.com/hattivatt/nix-configs-private.git
   branch = main

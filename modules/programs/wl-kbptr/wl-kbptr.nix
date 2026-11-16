@@ -6,7 +6,7 @@
   in
   {
     home.packages = with pkgs; [
-      wl-kbptr
+      local.wl-kbptr
     ];
     xdg.configFile."wl-kbptr/config".source = ini.generate "config" {
       general = {

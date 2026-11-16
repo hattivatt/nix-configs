@@ -40,6 +40,7 @@
         foundry:
           image: ghcr.io/felddy/foundryvtt:14
           hostname: myf
+          restart: always
           volumes:
             - type: bind
               source: /home/hattivatt/.local/share/FoundryVTT/common

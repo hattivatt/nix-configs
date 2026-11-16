@@ -9,6 +9,8 @@
     let
       cfg = config.services.campaign-bot;
 
+      runtime = if cfg.profile == null then cfg.package else cfg.profile;
+
       yaml = pkgs.formats.yaml { };
 
       settingsFile = yaml.generate "campaign-bot.yaml" (
@@ -65,11 +67,24 @@
       options.services.campaign-bot = {
         enable = lib.mkEnableOption "campaign-bot, a Discord bot that runs tabletop RPG campaigns";
 
-        package = lib.mkOption {
-          type = lib.types.package;
-          default = pkgs.local.campaign-bot;
-          defaultText = lib.literalExpression "pkgs.local.campaign-bot";
-          description = "The campaign-bot package to run.";
+        package = lib.mkPackageOption pkgs [ "local" "campaign-bot" ] { };
+
+        profile = lib.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+          example = "/nix/var/nix/profiles/campaign-bot";
+          description = ''
+            Nix profile the service runs campaign-bot from instead of
+            {option}`package`. The unit then calls `<profile>/bin/campaign-bot`,
+            so a release is deployed by switching the profile and restarting
+            {command}`campaign-bot.service` (deploy-rs), without a NixOS rebuild
+            or a new system generation, and {option}`package` is never evaluated.
+            The profile keeps its own generations
+            (`nix-env -p <profile> --rollback`) and is a GC root. It must exist
+            before the unit starts, so run the first deploy before switching the
+            system to this option. `null` keeps the store path of
+            {option}`package` in the unit.
+          '';
         };
 
         user = lib.mkOption {
@@ -158,6 +173,13 @@
       };
 
       config = lib.mkIf cfg.enable {
+        assertions = [
+          {
+            assertion = cfg.profile == null || lib.hasPrefix "/" cfg.profile;
+            message = "services.campaign-bot.profile must be an absolute path";
+          }
+        ];
+
         systemd.tmpfiles.settings."10-campaign-bot" =
           lib.optionalAttrs (!stateUnderVarLib) {
             ${cfg.stateDir}.d = {
@@ -192,7 +214,7 @@
               User = cfg.user;
               Group = cfg.group;
               WorkingDirectory = cfg.stateDir;
-              ExecStart = lib.getExe cfg.package;
+              ExecStart = "${runtime}/bin/campaign-bot";
               EnvironmentFile = lib.optional (cfg.environmentFile != null) cfg.environmentFile;
               Restart = "on-failure";
               RestartSec = 10;

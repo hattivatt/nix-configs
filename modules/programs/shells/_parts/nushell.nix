@@ -1,6 +1,7 @@
 {
   programs.nushell = {
     enable = true;
+    loadSessionVariables = true;
     environmentVariables = {
       EDITOR = "nvim";
       SYSTEMD_EDITOR = "nvim";
